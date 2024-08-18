@@ -1,0 +1,70 @@
+.side-menu {
+    width: 250px;
+    background-color: #343a40;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    padding-top: 20px;
+    color: white;
+    transition: width 0.3s;
+}
+
+.side-menu.collapsed {
+    width: 60px;
+}
+
+.side-menu ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.side-menu .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.side-menu .menu-item:hover {
+    background-color: #495057;
+}
+
+.side-menu .menu-text {
+    margin-left: 10px;
+    font-size: 16px;
+    display: inline-block;
+    transition: opacity 0.3s;
+}
+
+.side-menu.collapsed .menu-text {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.side-menu .dropdown-icon {
+    margin-left: auto;
+}
+
+.side-menu .submenu {
+    list-style-type: none;
+    padding: 0 0 0 20px;
+}
+
+.side-menu .submenu li {
+    padding: 8px 0;
+}
+
+.side-menu .submenu li a {
+    color: #adb5bd;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.side-menu .submenu li a:hover {
+    color: white;
+}

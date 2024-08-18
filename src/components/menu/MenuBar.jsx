@@ -1,38 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faSearch, faComments, faBell, faExpandArrowsAlt, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faSearch, faComments, faBell, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import SideMenu from './SideMenu';
 import './MenuBar.css';
 
 const MenuBar = () => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
+
     return (
-        <div className="menu-bar">
-            <div className="menu-bar-left">
-                <nav className="nav-links">
-                    <a href="/" className="icon">
-                        <FontAwesomeIcon icon={faBars} />
-                    </a>
-                    <a href="/">Home</a>
-                    <a href="/">Contact</a>
-                </nav>
+        <div>
+            <div className="menu-bar">
+                <div className="menu-bar-left">
+                    <nav className="nav-links">
+                        <a href="#" className="icon" onClick={toggleMenu}>
+                            <FontAwesomeIcon icon={faBars} />
+                        </a>
+                        <a href="/resimanager-spa/dashboard">Home</a>
+                        <a href="#">Contact</a>
+                    </nav>
+                </div>
+                <div className="menu-bar-right">
+                    <nav className="nav-links">
+                        <a href="#" className="icon">
+                            <FontAwesomeIcon icon={faSearch} />
+                        </a>
+                        <a href="#" className="icon">
+                            <FontAwesomeIcon icon={faComments} />
+                        </a>
+                        <a href="#" className="icon">
+                            <FontAwesomeIcon icon={faBell} />
+                        </a>
+                        <a href="/" className="icon">
+                            <FontAwesomeIcon icon={faSignOutAlt} />
+                        </a>
+                    </nav>
+                </div>
             </div>
-            <div className="menu-bar-right">
-                <nav className="nav-links">
-                    <a href="/" className="icon">
-                        <FontAwesomeIcon icon={faSearch} />
-                    </a>
-                    <a href="/" className="icon">
-                        <FontAwesomeIcon icon={faComments} />
-                        {/*<span className="badge">3</span>*/}
-                    </a>
-                    <a href="/" className="icon">
-                        <FontAwesomeIcon icon={faBell} />
-                        {/*<span className="badge">15</span>*/}
-                    </a>
-                    <a href="/" className="icon">
-                        <FontAwesomeIcon icon={faSignOutAlt} />
-                    </a>
-                </nav>
-            </div>
+            <SideMenu isOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
         </div>
     );
 };
