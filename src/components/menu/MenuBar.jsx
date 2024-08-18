@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faSearch, faComments, faBell, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import SideMenu from './SideMenu';
-import './MenuBar.css';
 
 const MenuBar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);

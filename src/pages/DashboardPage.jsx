@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import SideMenu from "../components/menu/SideMenu.jsx";
 import MenuBar from "../components/menu/MenuBar.jsx";
 import Content from "../components/content/Content.jsx";
 
-import "./DashboardPage.css";
 function DashboardPage() {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     return (
         <div className="dashboard">
-            <MenuBar/>
-            <SideMenu/>
-            <Content/>
+            <MenuBar />
+            <SideMenu isOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+            <Content />
         </div>
     );
 }

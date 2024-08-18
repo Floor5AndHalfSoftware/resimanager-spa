@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faChartPie, faUser, faCog, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import './SideMenu.css';
 
 const SideMenu = ({ isOpen, setIsMenuOpen }) => {
     const [isDashboardOpen, setIsDashboardOpen] = useState(false);
