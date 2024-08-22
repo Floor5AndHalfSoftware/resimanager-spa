@@ -5,7 +5,6 @@ import SideMenu from './SideMenu';
 
 const MenuBar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -18,7 +17,7 @@ const MenuBar = () => {
                         <a href="#" className="icon" onClick={toggleMenu}>
                             <FontAwesomeIcon icon={faBars} />
                         </a>
-                        <a href="/resimanager-spa/dashboard">Home</a>
+                        <a href="/resimanager-spa/dashboard">Dashboard</a>
                         <a href="#">Contact</a>
                     </nav>
                 </div>

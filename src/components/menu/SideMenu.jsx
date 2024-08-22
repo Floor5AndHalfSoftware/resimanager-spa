@@ -30,14 +30,14 @@ const SideMenu = ({ isOpen, setIsMenuOpen }) => {
                 <li>
                     <div className="menu-item" onClick={() => handleMenuClick(() => setIsDashboardOpen(!isDashboardOpen))}>
                         <FontAwesomeIcon icon={faChartPie} />
-                        <span className="menu-text">Dashboard</span>
+                        <span className="menu-text">Reports</span>
                         <FontAwesomeIcon icon={isDashboardOpen ? faAngleUp : faAngleDown} className="dropdown-icon" />
                     </div>
                     {isDashboardOpen && isOpen && (
                         <ul className="submenu">
-                            <li><a href="#">Dashboard v1</a></li>
-                            <li><a href="#">Dashboard v2</a></li>
-                            <li><a href="#">Dashboard v3</a></li>
+                            <li><a href="#">Reports v1</a></li>
+                            <li><a href="#">Reports v2</a></li>
+                            <li><a href="#">Reports v3</a></li>
                         </ul>
                     )}
                 </li>

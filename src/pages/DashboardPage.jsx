@@ -4,12 +4,9 @@ import MenuBar from "../components/menu/MenuBar.jsx";
 import Content from "../components/content/Content.jsx";
 
 function DashboardPage() {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-
     return (
         <div className="dashboard">
-            <MenuBar />
-            <SideMenu isOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+            <MenuBar/>
             <Content />
         </div>
     );
