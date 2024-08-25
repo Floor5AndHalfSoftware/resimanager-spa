@@ -1,0 +1,52 @@
+name: Resimanager SPA Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: Install dependencies for frontend
+        run: npm install
+
+      - name: Create frontend .env file
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_SERVICE_USR: ${{ secrets.VITE_SERVICE_USR }}
+          VITE_SERVICE_PASS: ${{ secrets.VITE_SERVICE_PASS }}
+        run: |
+          echo "VITE_API_URL=${VITE_API_URL}" > .env
+          echo "VITE_SERVICE_USR=${VITE_SERVICE_USR}" >> .env
+          echo "VITE_SERVICE_PASS=${VITE_SERVICE_PASS}" >> .env
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
+      - name: Deploy to VPS
+        env:
+          SSH_HOST: ${{ secrets.VPS_SSH_HOST }}
+          SSH_USERNAME: ${{ secrets.VPS_SSH_USERNAME }}
+          SSH_PASSWORD: ${{ secrets.VPS_SSH_PASSWORD }}
+        run: |
+          # Crear directorios en el VPS
+          sshpass -p "${SSH_PASSWORD}" ssh -o StrictHostKeyChecking=no "${SSH_USERNAME}@${SSH_HOST}" 'mkdir -p /var/www/html/resimanager'
+
+          # Copiar el build del frontend al VPS
+          rsync -avz --delete -e "sshpass -p '${SSH_PASSWORD}' ssh -o StrictHostKeyChecking=no" dist/ "${SSH_USERNAME}@${SSH_HOST}:/var/www/html/resimanager"
+          rsync -avz -e "sshpass -p '${SSH_PASSWORD}' ssh -o StrictHostKeyChecking=no" .env "${SSH_USERNAME}@${SSH_HOST}:/var/www/html/resimanager/.env"
+          exit
+          EOF
