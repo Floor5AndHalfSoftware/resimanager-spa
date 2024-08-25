@@ -32,7 +32,7 @@ const MenuBar = () => {
                         <a href="#" className="icon">
                             <FontAwesomeIcon icon={faBell} />
                         </a>
-                        <a href="/" className="icon">
+                        <a href="/resimanager" className="icon">
                             <FontAwesomeIcon icon={faSignOutAlt} />
                         </a>
                     </nav>
