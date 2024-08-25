@@ -7,7 +7,7 @@ const Login = () => {
         event.preventDefault();
         // Aquí podrías realizar la lógica de autenticación
         // Si la autenticación es exitosa:
-        navigate('/resimanager-spa/dashboard');
+        navigate('/resimanager/dashboard');
     };
 
     return (
