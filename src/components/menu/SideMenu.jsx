@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faChartPie, faUser, faCog, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import useMenuData from '../../hooks/useMenuData';
 
 const SideMenu = ({ isOpen, setIsMenuOpen }) => {
-    const [isDashboardOpen, setIsDashboardOpen] = useState(false);
-    const [isUserOpen, setIsUserOpen] = useState(false);
+    const { menuData, loading, error } = useMenuData();
+    const [openMenus, setOpenMenus] = useState({});
 
     const handleMouseEnter = () => {
         setIsMenuOpen(true);
@@ -14,11 +15,40 @@ const SideMenu = ({ isOpen, setIsMenuOpen }) => {
         setIsMenuOpen(false);
     };
 
-    const handleMenuClick = (menuToggleFunc) => {
-        if (isOpen) {
-            menuToggleFunc();
-        }
+    const handleMenuClick = (menuId) => {
+        setOpenMenus(prevState => ({
+            ...prevState,
+            [menuId]: !prevState[menuId]
+        }));
     };
+
+    const renderMenuItems = (menuItems) => {
+        return menuItems.map(item => {
+            const hasSubItems = item.submenus && item.submenus.length > 0;
+
+            return (
+                <li key={item.id}>
+                    <div className="menu-item" onClick={() => hasSubItems && handleMenuClick(item.id)}>
+                        <span className="menu-text">{item.nombre}</span>
+                        {hasSubItems && (
+                            <FontAwesomeIcon
+                                icon={openMenus[item.id] ? faAngleUp : faAngleDown}
+                                className="dropdown-icon"
+                            />
+                        )}
+                    </div>
+                    {hasSubItems && openMenus[item.id] && isOpen && (
+                        <ul className="submenu">
+                            {renderMenuItems(item.submenus)}
+                        </ul>
+                    )}
+                </li>
+            );
+        });
+    };
+
+    if (loading) return <p>Cargando menú...</p>;
+    if (error) return <p>{error}</p>;
 
     return (
         <div
@@ -27,40 +57,7 @@ const SideMenu = ({ isOpen, setIsMenuOpen }) => {
             onMouseLeave={handleMouseLeave}
         >
             <ul>
-                <li>
-                    <div className="menu-item" onClick={() => handleMenuClick(() => setIsDashboardOpen(!isDashboardOpen))}>
-                        <FontAwesomeIcon icon={faChartPie} />
-                        <span className="menu-text">Reports</span>
-                        <FontAwesomeIcon icon={isDashboardOpen ? faAngleUp : faAngleDown} className="dropdown-icon" />
-                    </div>
-                    {isDashboardOpen && isOpen && (
-                        <ul className="submenu">
-                            <li><a href="#">Reports v1</a></li>
-                            <li><a href="#">Reports v2</a></li>
-                            <li><a href="#">Reports v3</a></li>
-                        </ul>
-                    )}
-                </li>
-                <li>
-                    <div className="menu-item" onClick={() => handleMenuClick(() => setIsUserOpen(!isUserOpen))}>
-                        <FontAwesomeIcon icon={faUser} />
-                        <span className="menu-text">User Management</span>
-                        <FontAwesomeIcon icon={isUserOpen ? faAngleUp : faAngleDown} className="dropdown-icon" />
-                    </div>
-                    {isUserOpen && isOpen && (
-                        <ul className="submenu">
-                            <li><a href="#">Users</a></li>
-                            <li><a href="#">Roles</a></li>
-                            <li><a href="#">Permissions</a></li>
-                        </ul>
-                    )}
-                </li>
-                <li>
-                    <a href="#" className="menu-item">
-                        <FontAwesomeIcon icon={faCog} />
-                        <span className="menu-text">Settings</span>
-                    </a>
-                </li>
+                {menuData && renderMenuItems(menuData.menu)}
             </ul>
         </div>
     );
