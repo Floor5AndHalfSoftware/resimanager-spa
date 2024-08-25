@@ -1,0 +1,220 @@
+{
+  "menu": [
+    {
+      "id": 1,
+      "nombre": "Super Admin",
+      "tipo": "A",
+      "estado": "A",
+      "modulo": null,
+      "submenus": [
+        {
+          "id": 3,
+          "nombre": "Modulo",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Super-Admin",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        },
+        {
+          "id": 4,
+          "nombre": "Acciones",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Super-Admin",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        },
+        {
+          "id": 5,
+          "nombre": "Administradoras",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Super-Admin",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        },
+        {
+          "id": 6,
+          "nombre": "Conjuntos",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Super-Admin",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        },
+        {
+          "id": 7,
+          "nombre": "Perfiles de acceso",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Super-Admin",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        },
+        {
+          "id": 8,
+          "nombre": "Usuarios",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Super-Admin",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "nombre": "Administradora",
+      "tipo": "A",
+      "estado": "A",
+      "modulo": null,
+      "submenus": [
+        {
+          "id": 12,
+          "nombre": "Administradora",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Administradora",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        },
+        {
+          "id": 13,
+          "nombre": "Perfiles de acceso",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Administradora",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        },
+        {
+          "id": 14,
+          "nombre": "Usuarios",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Administradora",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        },
+        {
+          "id": 15,
+          "nombre": "Conjuntos",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Administradora",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "nombre": "Conjunto",
+      "tipo": "A",
+      "estado": "A",
+      "modulo": null,
+      "submenus": [
+        {
+          "id": 18,
+          "nombre": "Conjunto",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Conjunto",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        },
+        {
+          "id": 20,
+          "nombre": "Perfiles de acceso",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Conjunto",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        },
+        {
+          "id": 21,
+          "nombre": "Usuarios",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Conjunto",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        },
+        {
+          "id": 22,
+          "nombre": "Clase de propiedad",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Conjunto",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        },
+        {
+          "id": 23,
+          "nombre": "Propiedades",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Conjunto",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        },
+        {
+          "id": 24,
+          "nombre": "Propietarios",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Conjunto",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "nombre": "Propietario",
+      "tipo": "A",
+      "estado": "A",
+      "modulo": null,
+      "submenus": [
+        {
+          "id": 26,
+          "nombre": "Propiedades",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Propietario",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        },
+        {
+          "id": 27,
+          "nombre": "BUnoNuevo",
+          "tipo": "0",
+          "estado": "A",
+          "modulo": "Propietario",
+          "controlador": "ccontrolador",
+          "metodo": "index",
+          "submenus": []
+        }
+      ]
+    }
+  ]
+}
