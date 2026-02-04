@@ -1,6 +1,6 @@
 /* index.css - Estilos personalizados para DAAT con AdminLTE */
 
-/* Reset de estilos base de Vite que entran en conflicto con AdminLTE */
+/* Reset básico para compatibilidad con AdminLTE */
 body {
   margin: 0;
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
@@ -16,70 +16,48 @@ body {
   min-height: 100vh;
 }
 
-/* Estilos básicos temporales sin AdminLTE */
+/* Estilos personalizados adicionales para DAAT */
 .app-container {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
-/* Estilos básicos para login */
+/* Ajustes para el login */
 .login-page {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.login-box {
-  width: 100%;
-  max-width: 360px;
-  margin: auto;
+/* Mejoras para el sidebar menu */
+.nav-treeview {
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
-.card {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
-  padding: 2rem;
+.nav-treeview .nav-link {
+  padding-left: 2rem !important;
 }
 
-.login-card-body {
-  padding: 20px;
+.nav-item.menu-open > .nav-link .right {
+  transform: rotate(-90deg);
 }
 
-.input-group {
+.nav-item .nav-link .right {
+  transition: transform 0.3s ease;
+}
+
+.nav-sidebar .nav-item > .nav-link {
+  cursor: pointer;
+}
+
+/* Estilos específicos para DAAT */
+.brand-text {
+  font-weight: bold;
+}
+
+.login-logo {
+  font-size: 2.5rem;
+  font-weight: 300;
   margin-bottom: 1rem;
 }
-
-.form-control {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 1rem;
-}
-
-.btn {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-}
-
-/* Estilos para el sidebar menu */
 .nav-treeview {
   transition: all 0.3s ease;
   overflow: hidden;
