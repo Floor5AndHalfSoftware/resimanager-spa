@@ -18,9 +18,9 @@ function InnerApp() {
     return (
         <>
             <Routes>
-                <Route path="/resimanager" element={<LoginPage/>}/>
-                <Route path="/resimanager/login" element={<LoginPage/>}/>
-                <Route path="/resimanager/dashboard" element={<DashboardPage/>}/>
+                <Route path="/" element={<LoginPage/>}/>
+                <Route path="/login" element={<LoginPage/>}/>
+                <Route path="/dashboard" element={<DashboardPage/>}/>
             </Routes>
         </>
     )
