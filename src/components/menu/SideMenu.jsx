@@ -49,12 +49,12 @@ const SideMenu = () => {
     return (
         <aside className="main-sidebar sidebar-dark-primary elevation-4">
             {/* Brand Logo */}
-            <a href="/resimanager/dashboard" className="brand-link">
+            <a href="/dashboard" className="brand-link">
                 <svg className="brand-image img-circle elevation-3" style={{opacity: .8, width: '33px', height: '33px', marginLeft: '0.8rem'}} viewBox="0 0 24 24" fill="#fff">
                     <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-4 0-7-3-7-7V8.3l7-3.11 7 3.11V13c0 4-3 7-7 7z"/>
                     <circle cx="12" cy="12" r="3"/>
                 </svg>
-                <span className="brand-text font-weight-light">ResiManager</span>
+                <span className="brand-text font-weight-light">DAAT</span>
             </a>
 
             {/* Sidebar */}
