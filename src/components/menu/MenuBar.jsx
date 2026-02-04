@@ -1,45 +1,55 @@
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faSearch, faComments, faBell, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import SideMenu from './SideMenu';
+import React from 'react';
 
-const MenuBar = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen);
-    };
-
+const MenuBar = ({ toggleSidebar }) => {
     return (
-        <div>
-            <div className="menu-bar">
-                <div className="menu-bar-left">
-                    <nav className="nav-links">
-                        <a href="#" className="icon" onClick={toggleMenu}>
-                            <FontAwesomeIcon icon={faBars} />
-                        </a>
-                        <a href="/resimanager/dashboard">Dashboard</a>
-                        <a href="#">Contact</a>
-                    </nav>
-                </div>
-                <div className="menu-bar-right">
-                    <nav className="nav-links">
-                        <a href="#" className="icon">
-                            <FontAwesomeIcon icon={faSearch} />
-                        </a>
-                        <a href="#" className="icon">
-                            <FontAwesomeIcon icon={faComments} />
-                        </a>
-                        <a href="#" className="icon">
-                            <FontAwesomeIcon icon={faBell} />
-                        </a>
-                        <a href="/" className="icon">
-                            <FontAwesomeIcon icon={faSignOutAlt} />
-                        </a>
-                    </nav>
-                </div>
-            </div>
-            <SideMenu isOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
-        </div>
+        <nav className="main-header navbar navbar-expand navbar-white navbar-light">
+            {/* Left navbar links */}
+            <ul className="navbar-nav">
+                <li className="nav-item">
+                    <a className="nav-link" onClick={toggleSidebar} href="#" role="button">
+                        <i className="fas fa-bars"></i>
+                    </a>
+                </li>
+                <li className="nav-item d-none d-sm-inline-block">
+                    <a href="/resimanager/dashboard" className="nav-link">Home</a>
+                </li>
+                <li className="nav-item d-none d-sm-inline-block">
+                    <a href="#" className="nav-link">Contact</a>
+                </li>
+            </ul>
+
+            {/* Right navbar links */}
+            <ul className="navbar-nav ml-auto">
+                {/* Navbar Search */}
+                <li className="nav-item">
+                    <a className="nav-link" href="#" role="button">
+                        <i className="fas fa-search"></i>
+                    </a>
+                </li>
+
+                {/* Messages Dropdown Menu */}
+                <li className="nav-item">
+                    <a className="nav-link" href="#">
+                        <i className="far fa-comments"></i>
+                        <span className="badge badge-danger navbar-badge">3</span>
+                    </a>
+                </li>
+
+                {/* Notifications Dropdown Menu */}
+                <li className="nav-item">
+                    <a className="nav-link" href="#">
+                        <i className="far fa-bell"></i>
+                        <span className="badge badge-warning navbar-badge">15</span>
+                    </a>
+                </li>
+
+                <li className="nav-item">
+                    <a className="nav-link" href="/resimanager/login">
+                        <i className="fas fa-sign-out-alt"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     );
 };
 

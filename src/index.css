@@ -1,59 +1,51 @@
-/* index.css */
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+/* index.css - Estilos personalizados para ResiManager con AdminLTE */
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
-}
-
+/* Reset de estilos base de Vite que entran en conflicto con AdminLTE */
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #f4f6f9;
+}
+
+#root {
+  width: 100%;
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Estilos personalizados adicionales */
+.app-container {
+  min-height: 100vh;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+/* Ajustes para el login */
+.login-page {
+  background: #e9ecef;
+}
+
+/* Mejoras para el sidebar menu */
+.nav-treeview {
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.nav-treeview .nav-link {
+  padding-left: 2rem !important;
+}
+
+.nav-item.menu-open > .nav-link .right {
+  transform: rotate(-90deg);
+}
+
+.nav-item .nav-link .right {
+  transition: transform 0.3s ease;
+}
+
+.nav-sidebar .nav-item > .nav-link {
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-
-button:hover {
-  border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {
@@ -72,12 +64,7 @@ button:focus-visible {
 }
 
 /* App.css */
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
+/* Nota: Estilos de #root movidos arriba para AdminLTE */
 
 .logo {
   height: 6em;
@@ -160,102 +147,8 @@ button:focus-visible {
   height: 100%;
 }
 
-/* Login.css */
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f7f7f7;
-}
-
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f7f7f7;
-}
-
-.login-box {
-  background: white;
-  padding: 20px 40px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  max-width: 400px;
-  width: 100%;
-}
-
-.login-box h2 {
-  font-size: 24px;
-  margin-bottom: 10px;
-  color: #555;
-}
-
-.login-box p {
-  font-size: 14px;
-  margin-bottom: 20px;
-  color: #888;
-}
-
-.input-group {
-  position: relative;
-  margin-bottom: 15px;
-}
-
-.input-group input {
-  width: calc(100% - 40px);
-  padding: 10px 35px 10px 10px;
-  font-size: 16px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-}
-
-.input-icon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #aaa;
-}
-
-.checkbox-container {
-  text-align: left;
-  margin-bottom: 15px;
-}
-
-.checkbox-container input {
-  margin-right: 10px;
-}
-
-.btn {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  margin-bottom: 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  color: white;
-}
-
-.links {
-  margin-top: 20px;
-}
-
-.links a {
-  color: #007bff;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.links a:hover {
-  text-decoration: underline;
-}
+/* Login.css - Usando estilos de AdminLTE */
+/* Los estilos de login-box son manejados por AdminLTE */
 
 /* MenuBar.css */
 .menu-bar {
