@@ -7,7 +7,7 @@ const Login = () => {
         event.preventDefault();
         // Aquí podrías realizar la lógica de autenticación
         // Si la autenticación es exitosa:
-        navigate('/dashboard');
+        navigate('/daat/dashboard');
     };
 
     return (

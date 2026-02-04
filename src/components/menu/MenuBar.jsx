@@ -11,7 +11,7 @@ const MenuBar = ({ toggleSidebar }) => {
                     </a>
                 </li>
                 <li className="nav-item d-none d-sm-inline-block">
-                    <a href="/dashboard" className="nav-link">Home</a>
+                    <a href="/daat/dashboard" className="nav-link">Home</a>
                 </li>
                 <li className="nav-item d-none d-sm-inline-block">
                     <a href="#" className="nav-link">Contact</a>
@@ -44,7 +44,7 @@ const MenuBar = ({ toggleSidebar }) => {
                 </li>
 
                 <li className="nav-item">
-                    <a className="nav-link" href="/login">
+                    <a className="nav-link" href="/daat/login">
                         <i className="fas fa-sign-out-alt"></i>
                     </a>
                 </li>

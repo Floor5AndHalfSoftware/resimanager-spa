@@ -18,9 +18,9 @@ function InnerApp() {
     return (
         <>
             <Routes>
-                <Route path="/" element={<LoginPage/>}/>
-                <Route path="/login" element={<LoginPage/>}/>
-                <Route path="/dashboard" element={<DashboardPage/>}/>
+                <Route path="/daat" element={<LoginPage/>}/>
+                <Route path="/daat/login" element={<LoginPage/>}/>
+                <Route path="/daat/dashboard" element={<DashboardPage/>}/>
             </Routes>
         </>
     )

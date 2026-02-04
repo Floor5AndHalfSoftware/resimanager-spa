@@ -4,16 +4,16 @@ import { Link, useLocation } from 'react-router-dom';
 const Breadcrumb = () => {
     const location = useLocation();
 
-    const pathnames = location.pathname.split('/').filter((x) => x);
+    const pathnames = location.pathname.split('/').filter((x) => x).filter((x) => x !== 'daat');
 
     return (
         <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
                 <li className="breadcrumb-item">
-                    <Link to="/dashboard">Home</Link>
+                    <Link to="/daat/dashboard">Home</Link>
                 </li>
                 {pathnames.map((value, index) => {
-                    const to = `/${pathnames.slice(0, index + 1).join('/')}`;
+                    const to = `/daat/${pathnames.slice(0, index + 1).join('/')}`;
 
                     return (
                         <li key={to} className={`breadcrumb-item ${index === pathnames.length - 1 ? 'active' : ''}`}>
