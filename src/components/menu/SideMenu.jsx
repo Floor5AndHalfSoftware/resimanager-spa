@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import useMenuData from '../../hooks/useMenuData';
+import { useAuth } from '../../context/AuthContext';
 
 const SideMenu = () => {
     const { menuData, loading, error } = useMenuData();
+    const { user } = useAuth();
     const [openMenus, setOpenMenus] = useState({});
 
     const handleMenuClick = (menuId) => {
@@ -15,14 +17,14 @@ const SideMenu = () => {
     const renderMenuItems = (menuItems) => {
         return menuItems.map(item => {
             const hasSubItems = item.submenus && item.submenus.length > 0;
-            const isOpen = openMenus[item.id];
+            const isOpen = openMenus[item.itemId];
 
             return (
-                <li key={item.id} className={`nav-item ${isOpen ? 'menu-open' : ''}`}>
+                <li key={item.itemId} className={`nav-item ${isOpen ? 'menu-open' : ''}`}>
                     <a href="#" className={`nav-link ${isOpen ? 'active' : ''}`} onClick={(e) => {
                         if (hasSubItems) {
                             e.preventDefault();
-                            handleMenuClick(item.id);
+                            handleMenuClick(item.itemId);
                         }
                     }}>
                         <i className={`nav-icon fas ${item.icon || 'fa-circle'}`}></i>
@@ -67,14 +69,14 @@ const SideMenu = () => {
                         </svg>
                     </div>
                     <div className="info">
-                        <a href="#" className="d-block">Usuario</a>
+                        <a href="#" className="d-block">{user?.nombre || user?.usuario || 'Usuario'}</a>
                     </div>
                 </div>
 
                 {/* Sidebar Menu */}
                 <nav className="mt-2">
                     <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        {menuData && renderMenuItems(menuData.menu)}
+                        {menuData && renderMenuItems(menuData)}
                     </ul>
                 </nav>
             </div>

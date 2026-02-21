@@ -1,6 +1,9 @@
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom' // Import necessary components
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from "./pages/LoginPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
+import ContextSelectorPage from "./pages/ContextSelectorPage.jsx";
 
 function InnerApp() {
     // const navigate = useNavigate()
@@ -20,7 +23,22 @@ function InnerApp() {
             <Routes>
                 <Route path="/" element={<LoginPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
-                <Route path="/dashboard" element={<DashboardPage/>}/>
+                <Route 
+                    path="/select-context" 
+                    element={
+                        <ProtectedRoute>
+                            <ContextSelectorPage/>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route 
+                    path="/dashboard" 
+                    element={
+                        <ProtectedRoute requireContext={true}>
+                            <DashboardPage/>
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
         </>
     )
@@ -32,7 +50,9 @@ function App() {
         <>
             <div className="App">
                 <Router>
-                    <InnerApp/>
+                    <AuthProvider>
+                        <InnerApp/>
+                    </AuthProvider>
                 </Router>
             </div>
         </>
