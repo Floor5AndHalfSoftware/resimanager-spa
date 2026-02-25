@@ -73,7 +73,7 @@ const Login = () => {
             <div className="login-box">
                 <div className="card card-outline card-primary">
                     <div className="card-header text-center">
-                        <h1 className="h1"><b>Resi</b>Manager</h1>
+                        <img src="/resimanager-logo-form.png" alt="ResiManager" style={{maxHeight: '120px', maxWidth: '250px', width: 'auto'}} />
                     </div>
                     <div className="card-body">
                         <p className="login-box-msg">Inicia sesión para comenzar</p>
@@ -88,54 +88,63 @@ const Login = () => {
                         )}
 
                         <form onSubmit={handleSubmit}>
-                            <div className="input-group mb-3">
-                                <input 
-                                    type="text" 
-                                    className="form-control" 
-                                    placeholder="Usuario o Email" 
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    disabled={loading}
-                                    required
-                                />
-                                <div className="input-group-append">
-                                    <div className="input-group-text">
-                                        <span className="fas fa-user"></span>
+                            <div className="form-group">
+                                <label htmlFor="username">Usuario o Email</label>
+                                <div className="input-group">
+                                    <input 
+                                        type="text" 
+                                        className="form-control" 
+                                        id="username"
+                                        placeholder="Ingresa tu usuario o email" 
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        disabled={loading}
+                                        required
+                                    />
+                                    <div className="input-group-append">
+                                        <div className="input-group-text">
+                                            <span className="fas fa-user"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="input-group mb-3">
-                                <input 
-                                    type="password" 
-                                    className="form-control" 
-                                    placeholder="Contraseña" 
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    disabled={loading}
-                                    required
-                                />
-                                <div className="input-group-append">
-                                    <div className="input-group-text">
-                                        <span className="fas fa-lock"></span>
+                            <div className="form-group">
+                                <label htmlFor="password">Contraseña</label>
+                                <div className="input-group">
+                                    <input 
+                                        type="password" 
+                                        className="form-control" 
+                                        id="password"
+                                        placeholder="Ingresa tu contraseña" 
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        disabled={loading}
+                                        required
+                                    />
+                                    <div className="input-group-append">
+                                        <div className="input-group-text">
+                                            <span className="fas fa-lock"></span>
+                                        </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <div className="form-check">
+                                    <input 
+                                        type="checkbox" 
+                                        className="form-check-input"
+                                        id="remember"
+                                        checked={rememberMe}
+                                        onChange={(e) => setRememberMe(e.target.checked)}
+                                        disabled={loading}
+                                    />
+                                    <label className="form-check-label" htmlFor="remember">
+                                        Recordarme
+                                    </label>
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-8">
-                                    <div className="icheck-primary">
-                                        <input 
-                                            type="checkbox" 
-                                            id="remember"
-                                            checked={rememberMe}
-                                            onChange={(e) => setRememberMe(e.target.checked)}
-                                            disabled={loading}
-                                        />
-                                        <label htmlFor="remember">
-                                            Recordarme
-                                        </label>
-                                    </div>
-                                </div>
-                                <div className="col-4">
+                                <div className="col-12">
                                     <button 
                                         type="submit" 
                                         className="btn btn-primary btn-block"
@@ -153,9 +162,11 @@ const Login = () => {
                                 </div>
                             </div>
                         </form>
-                        <p className="mb-1">
-                            <a href="#">Olvidé mi contraseña</a>
-                        </p>
+                        <div className="mt-3">
+                            <p className="mb-1">
+                                <a href="#">Olvidé mi contraseña</a>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

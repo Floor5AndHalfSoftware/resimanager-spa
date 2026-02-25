@@ -4,6 +4,10 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from "./pages/LoginPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import ContextSelectorPage from "./pages/ContextSelectorPage.jsx";
+import FormShowcase from "./pages/FormShowcase.jsx";
+import HomePage from "./pages/HomePage.jsx";
+import GenericPage from "./pages/GenericPage.jsx";
+import PropertiesPage from "./pages/PropertiesPage.jsx";
 
 function InnerApp() {
     // const navigate = useNavigate()
@@ -23,6 +27,7 @@ function InnerApp() {
             <Routes>
                 <Route path="/" element={<LoginPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
+                <Route path="/showcase" element={<FormShowcase/>}/>
                 <Route 
                     path="/select-context" 
                     element={
@@ -38,7 +43,20 @@ function InnerApp() {
                             <DashboardPage/>
                         </ProtectedRoute>
                     }
-                />
+                >
+                    {/* Default dashboard home page */}
+                    <Route index element={<HomePage />} />
+                    
+                    {/* Specific page implementations (add more as needed) */}
+                    <Route path="propiedades" element={<PropertiesPage />} />
+                    <Route path="propiedad/:method" element={<PropertiesPage />} />
+                    
+                    {/* Generic route for controller/method pattern */}
+                    <Route path=":controller/:method" element={<GenericPage />} />
+                    
+                    {/* Generic route for simple names */}
+                    <Route path=":controller" element={<GenericPage />} />
+                </Route>
             </Routes>
         </>
     )

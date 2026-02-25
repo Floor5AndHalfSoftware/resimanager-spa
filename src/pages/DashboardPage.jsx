@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { Outlet } from "react-router-dom";
 import SideMenu from "../components/menu/SideMenu.jsx";
 import MenuBar from "../components/menu/MenuBar.jsx";
-import Content from "../components/content/Content.jsx";
 
 function DashboardPage() {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -13,11 +13,11 @@ function DashboardPage() {
     // AdminLTE requiere clases específicas en el body
     useEffect(() => {
         // Añadir clases base de AdminLTE al body
-        document.body.classList.add('hold-transition', 'sidebar-mini');
+        document.body.classList.add('hold-transition', 'sidebar-mini', 'layout-fixed');
         
         // Cleanup al desmontar
         return () => {
-            document.body.classList.remove('hold-transition', 'sidebar-mini', 'sidebar-collapse');
+            document.body.classList.remove('hold-transition', 'sidebar-mini', 'layout-fixed', 'sidebar-collapse');
         };
     }, []);
 
@@ -34,7 +34,10 @@ function DashboardPage() {
         <div className="wrapper">
             <MenuBar toggleSidebar={toggleSidebar}/>
             <SideMenu/>
-            <Content />
+            <Outlet />
+            <footer className="main-footer">
+                <strong>ResiManager</strong> &copy; {new Date().getFullYear()}
+            </footer>
         </div>
     );
 }

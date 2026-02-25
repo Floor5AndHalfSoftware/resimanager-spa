@@ -1,4 +1,4 @@
-/* index.css - Estilos personalizados para DAAT con AdminLTE */
+/* index.css - Estilos personalizados para ResiManager con AdminLTE */
 
 /* Reset básico para compatibilidad con AdminLTE */
 body {
@@ -16,7 +16,7 @@ body {
   min-height: 100vh;
 }
 
-/* Estilos personalizados adicionales para DAAT */
+/* Estilos personalizados adicionales para ResiManager */
 .app-container {
   min-height: 100vh;
 }
@@ -48,7 +48,64 @@ body {
   cursor: pointer;
 }
 
-/* Estilos específicos para DAAT */
+/* Sidebar full height - siguiendo AdminLTE template */
+.main-sidebar {
+  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1038;
+}
+
+/* Icon colors for better visibility */
+.nav-sidebar .nav-icon.text-info {
+  color: #17a2b8 !important;
+}
+
+.nav-sidebar .nav-icon.text-success {
+  color: #28a745 !important;
+}
+
+.nav-sidebar .nav-icon.text-warning {
+  color: #ffc107 !important;
+}
+
+.nav-sidebar .nav-icon.text-danger {
+  color: #dc3545 !important;
+}
+
+.nav-sidebar .nav-icon.text-primary {
+  color: #007bff !important;
+}
+
+.nav-sidebar .nav-icon.text-secondary {
+  color: #6c757d !important;
+}
+
+/* Submenu icons */
+.nav-treeview .nav-icon {
+  font-size: 0.6rem;
+  margin-left: 0.2rem;
+}
+
+/* Brand link hover effect */
+.brand-link:hover {
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+/* Nav item hover effect */
+.nav-sidebar .nav-item > .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-sidebar .nav-item.menu-open > .nav-link,
+.nav-sidebar .nav-item > .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Estilos específicos para ResiManager */
 .brand-text {
   font-weight: bold;
 }
@@ -58,83 +115,13 @@ body {
   font-weight: 300;
   margin-bottom: 1rem;
 }
-.nav-treeview {
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
 
-.nav-treeview .nav-link {
-  padding-left: 2rem !important;
-}
 
-.nav-item.menu-open > .nav-link .right {
-  transform: rotate(-90deg);
-}
-
-.nav-item .nav-link .right {
-  transition: transform 0.3s ease;
-}
-
-.nav-sidebar .nav-item > .nav-link {
-  cursor: pointer;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
-}
 
 /* App.css */
 /* Nota: Estilos de #root movidos arriba para AdminLTE */
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
 
 /* Breadcrumb.css */
 .breadcrumb {
@@ -181,191 +168,263 @@ body {
 /* Login.css - Usando estilos de AdminLTE */
 /* Los estilos de login-box son manejados por AdminLTE */
 
-/* MenuBar.css */
-.menu-bar {
+/* Login logo styling */
+.login-logo {
+  text-align: center;
+  margin-bottom: 1.5rem;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: white;
-  border-bottom: 1px solid #e0e0e0;
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-}
-
-.menu-bar-left {
-  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
-.menu-button {
-  background: none;
-  border: none;
-  font-size: 20px;
+.login-logo img {
+  display: block;
+}
+
+/* Estilos adicionales para formularios - AdminLTE Enhancement */
+/* Form validation states */
+.is-warning {
+  border-color: #ffc107;
+}
+
+.is-warning:focus {
+  border-color: #ffc107;
+  box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+}
+
+.warning-feedback {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 80%;
+  color: #ffc107;
+}
+
+/* Form control border styles (from template) */
+.form-control-border {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
+  box-shadow: inherit;
+}
+
+.form-control-border.border-width-2 {
+  border-bottom-width: 2px;
+}
+
+/* Custom control enhancements */
+.custom-control-label {
   cursor: pointer;
-  margin-right: 20px;
+  user-select: none;
 }
 
-.nav-links a {
-  margin-right: 20px;
-  text-decoration: none;
-  color: #555;
-  font-size: 16px;
+.custom-control-input:disabled ~ .custom-control-label {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.menu-bar-right {
-  display: flex;
-  align-items: center;
+/* Form group spacing */
+.form-group {
+  margin-bottom: 1rem;
 }
 
-.btn.close-btn {
-  background-color: #d9534f;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  margin-right: 20px;
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+/* Input group improvements */
+.input-group-text {
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+}
+
+/* Button improvements */
+.btn {
   cursor: pointer;
-  font-size: 14px;
-  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
 }
 
-.secondary-nav-links {
-  display: flex;
-  margin-right: 20px;
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
 }
 
-.secondary-nav-links a {
-  margin-right: 10px;
-  text-decoration: none;
-  color: #555;
-  font-size: 14px;
+/* Card form styles */
+.card-primary:not(.card-outline) > .card-header {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
 }
 
-.header-icons {
-  display: flex;
-  align-items: center;
+.card-outline {
+  box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
 }
 
-.header-icons .icon {
-  position: relative;
-  margin-left: 15px;
-  font-size: 20px;
-  color: #555;
-  text-decoration: none;
+.card-outline.card-primary {
+  border-top: 3px solid #007bff;
 }
 
-.header-icons .icon .badge {
-  position: absolute;
-  top: -5px;
-  right: -10px;
-  background-color: red;
-  color: white;
-  border-radius: 50%;
-  padding: 3px 6px;
-  font-size: 12px;
+/* Context Selector - Wider box for better readability */
+.context-selector-box {
+  width: 850px;
+  max-width: 95%;
+  margin: 5% auto;
 }
 
-.header-icons .icon:hover {
-  color: #000;
+.context-selector-box .custom-control-label {
+  font-size: 1rem;
+  line-height: 1.6;
+  padding-left: 0.5rem;
+  word-wrap: break-word;
+  white-space: normal;
 }
 
-/* SideMenu.css & DashboardPage.css */
-.side-menu {
-  width: 250px;
-  background-color: #343a40;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  overflow-y: auto;
-  padding-top: 20px;
-  color: white;
-  transition: width 0.3s;
+.context-selector-box .custom-control {
+  padding-left: 1.8rem;
+  margin-bottom: 0.75rem;
 }
 
-.side-menu.collapsed {
-  width: 60px;
+.context-selector-box .form-group label {
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
-.side-menu ul {
-  list-style-type: none;
-  padding: 0;
+.context-selector-box .card-body {
+  padding: 2rem;
 }
 
-.side-menu .menu-item {
-  display: flex;
-  align-items: center;
-  padding: 10px 20px;
-  color: white;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background-color 0.3s;
+/* Context section styles */
+.context-section {
+  margin-bottom: 1.5rem;
 }
 
-.side-menu .menu-item:hover {
-  background-color: #495057;
+.context-section:last-child {
+  margin-bottom: 0;
 }
 
-.side-menu .menu-text {
-  margin-left: 10px;
-  font-size: 16px;
-  display: inline-block;
-  transition: opacity 0.3s;
+.context-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #007bff;
 }
 
-.side-menu.collapsed .menu-text {
-  opacity: 0;
-  visibility: hidden;
+.context-section .custom-control:last-child {
+  margin-bottom: 0;
 }
 
-.side-menu .dropdown-icon {
-  margin-left: auto;
+/* Responsive adjustments for smaller screens */
+@media (max-width: 576px) {
+  .context-selector-box {
+    width: 95%;
+    margin: 3% auto;
+  }
+  
+  .context-selector-box .card-body {
+    padding: 1.5rem;
+  }
+  
+  .context-section-title {
+    font-size: 1rem;
+  }
 }
 
-.side-menu .submenu {
-  list-style-type: none;
-  padding: 0 0 0 20px;
+@media (min-width: 577px) and (max-width: 768px) {
+  .context-selector-box {
+    width: 90%;
+    max-width: 650px;
+  }
 }
 
-.side-menu .submenu li {
-  padding: 8px 0;
+@media (min-width: 769px) and (max-width: 992px) {
+  .context-selector-box {
+    width: 750px;
+  }
 }
 
-.side-menu .submenu li a {
-  color: #adb5bd;
-  text-decoration: none;
-  font-size: 14px;
+/* MenuBar - Context indicator styles */
+.navbar .nav-link.text-muted {
+  pointer-events: none;
 }
 
-.side-menu .submenu li a:hover {
-  color: white;
+.navbar .nav-link.text-muted small {
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
-.dashboard {
-  display: flex;
-  height: 85vh;
-  overflow: hidden;
+/* Hover effect for change context button */
+.navbar .nav-item a[title="Cambiar contexto de trabajo"]:hover {
+  color: #007bff;
 }
 
-.main-content {
-  flex-grow: 1;
-  margin-left: 250px;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  overflow-x: hidden;
-  box-sizing: border-box;
-  height: 100vh;
+.navbar .nav-item a[title="Cambiar contexto de trabajo"] i {
+  transition: transform 0.2s ease;
 }
 
-.page-content {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: #f8f9fa;
-  box-sizing: border-box;
-  overflow-y: auto;
+.navbar .nav-item a[title="Cambiar contexto de trabajo"]:hover i {
+  transform: rotate(180deg);
+}
+
+/* Brand logo styles */
+.brand-link .brand-image {
+  max-height: 45px;
+  width: auto;
+  max-width: 45px;
+  margin-left: 0.8rem;
+  margin-right: 0.5rem;
+  object-fit: contain;
+}
+
+/* Large brand logo for better visibility - DOUBLED SIZE - Centered without text */
+.brand-link-large {
+  min-height: 140px !important;
+  padding: 2rem 1rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+}
+
+.brand-image-large {
+  max-height: 120px !important;
+  max-width: 240px !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Collapsed sidebar - small logo */
+.sidebar-collapse .brand-link-large {
+  min-height: 57px !important;
+  padding: 0.5rem !important;
+}
+
+.sidebar-collapse .brand-image-large {
+  max-height: 40px !important;
+  max-width: 40px !important;
+}
+
+/* When hovering specifically over the main-sidebar in collapsed state, expand logo */
+.main-sidebar.sidebar-collapse:hover .brand-link-large {
+  min-height: 140px !important;
+  padding: 2rem 1rem !important;
+}
+
+.main-sidebar.sidebar-collapse:hover .brand-image-large {
+  max-height: 120px !important;
+  max-width: 240px !important;
+}
+
+/* If the logo is rectangular (wider), allow it to be wider */
+.brand-link .brand-image.brand-image-xl {
+  max-width: 80px;
+  max-height: 45px;
+}
+
+/* Adjust brand text spacing */
+.brand-link .brand-text {
+  margin-left: 0.5rem;
 }
