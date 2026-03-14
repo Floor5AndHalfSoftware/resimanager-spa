@@ -1,25 +1,31 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 const ContextSelector = () => {
-    const { selectContext } = useAuth();
+    const { selectContext, activeContext } = useAuth();
     const [contextosAplanados, setContextosAplanados] = useState([]);
     const [selectedContext, setSelectedContext] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
-
     useEffect(() => {
+        // If already has active context, redirect to dashboard
+        if (activeContext) {
+            navigate('/dashboard', { replace: true });
+            return;
+        }
+
         // Load flattened contexts from localStorage
         const stored = localStorage.getItem('contextosAplanados');
         if (stored) {
             setContextosAplanados(JSON.parse(stored));
         } else {
             // No contexts available, redirect to login
-            navigate('/login');
+            navigate('/login', { replace: true });
         }
-    }, [navigate]);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    // Empty deps intentional - we only want this to run once on mount
 
     const handleContextSelect = (context) => {
         setSelectedContext(context);

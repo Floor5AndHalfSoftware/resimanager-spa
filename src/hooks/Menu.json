@@ -53,8 +53,8 @@
           "tipo": "0",
           "estado": "A",
           "modulo": "Super-Admin",
-          "controlador": "ccontrolador",
-          "metodo": "index",
+          "controlador": "perfiles",
+          "metodo": "",
           "submenus": []
         },
         {
@@ -92,8 +92,8 @@
           "tipo": "0",
           "estado": "A",
           "modulo": "Administradora",
-          "controlador": "ccontrolador",
-          "metodo": "index",
+          "controlador": "perfiles",
+          "metodo": "",
           "submenus": []
         },
         {
@@ -141,8 +141,8 @@
           "tipo": "0",
           "estado": "A",
           "modulo": "Conjunto",
-          "controlador": "ccontrolador",
-          "metodo": "index",
+          "controlador": "perfiles",
+          "metodo": "",
           "submenus": []
         },
         {

@@ -1,16 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../context/AuthContext';
 
 const Login = () => {
     const navigate = useNavigate();
-    const { login, selectContext } = useAuth();
+    const { login, selectContext, user, activeContext, loading: authLoading } = useAuth();
     
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
+    // Check authentication on mount and redirect if needed
+    useEffect(() => {
+        if (!authLoading && user) {
+            // User is authenticated, redirect appropriately
+            const destination = activeContext ? '/dashboard' : '/select-context';
+            navigate(destination, { replace: true });
+        }
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    // Empty deps intentional - we only want this to run once on mount
 
     const handleSubmit = async (event) => {
         event.preventDefault();

@@ -21,13 +21,20 @@ const SideMenu = () => {
   const getMenuPath = (item) => {
     if (!item) return "/dashboard";
 
-    // If controlador and metodo are available, use them
-    if (item.controlador && item.metodo) {
+    // If controlador is available
+    if (item.controlador) {
       const controller = item.controlador
         .toLowerCase()
         .replace("controller", "");
-      const method = item.metodo.toLowerCase();
-      return `/dashboard/${controller}/${method}`;
+      
+      // If metodo is also available and not empty, use both
+      if (item.metodo && item.metodo.trim() !== "") {
+        const method = item.metodo.toLowerCase();
+        return `/dashboard/${controller}/${method}`;
+      }
+      
+      // If only controlador is available, use it alone
+      return `/dashboard/${controller}`;
     }
 
     // Otherwise, create a simple path from the item name

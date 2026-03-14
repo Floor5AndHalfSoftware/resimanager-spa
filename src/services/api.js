@@ -6,22 +6,15 @@ const BASE_URL = `${API_BASE_URL}${API_VERSION}`;
 
 /**
  * Get headers for API requests
- * @param {boolean} includeAuth - Include Authorization header
+ * Note: Token is now sent via HttpOnly cookie, so we don't include Authorization header
  * @param {object} extraHeaders - Additional headers
  * @returns {object} Headers object
  */
-const getHeaders = (includeAuth = true, extraHeaders = {}) => {
+const getHeaders = (extraHeaders = {}) => {
     const headers = {
         'Content-Type': 'application/json',
         ...extraHeaders
     };
-
-    if (includeAuth) {
-        const token = localStorage.getItem('token');
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-        }
-    }
 
     return headers;
 };
@@ -58,7 +51,8 @@ export const login = async (username, password) => {
 
     const response = await fetch(`${BASE_URL}/login`, {
         method: 'POST',
-        headers: getHeaders(false),
+        headers: getHeaders(),
+        credentials: 'include', // Important: Include cookies in request
         body: JSON.stringify({
             username,
             password: encodedPassword
@@ -79,7 +73,8 @@ export const login = async (username, password) => {
 export const cambiarContexto = async (contextData) => {
     const response = await fetch(`${BASE_URL}/contexto/cambiar`, {
         method: 'POST',
-        headers: getHeaders(true),
+        headers: getHeaders(),
+        credentials: 'include', // Important: Include cookies in request
         body: JSON.stringify({
             tipo: contextData.tipo,
             entidadId: contextData.entidadId,
@@ -98,13 +93,13 @@ export const cambiarContexto = async (contextData) => {
 export const getMenuByPerfil = async (perfilId) => {
     console.log('🍔 Calling getMenuByPerfil with perfilId:', perfilId);
     console.log('🔗 URL:', `${BASE_URL}/menu/perfil`);
-    console.log('🔑 Token:', localStorage.getItem('token') ? 'Exists' : 'Missing');
     
     const response = await fetch(`${BASE_URL}/menu/perfil`, {
         method: 'GET',
-        headers: getHeaders(true, {
+        headers: getHeaders({
             'X-Perfil-Id': perfilId.toString()
-        })
+        }),
+        credentials: 'include' // Important: Include cookies in request
     });
     
     console.log('📡 Response status:', response.status);
@@ -120,17 +115,22 @@ export const getMenuByPerfil = async (perfilId) => {
 export const getAllMenus = async () => {
     const response = await fetch(`${BASE_URL}/menu`, {
         method: 'GET',
-        headers: getHeaders(true)
+        headers: getHeaders(),
+        credentials: 'include' // Important: Include cookies in request
     });
 
     return handleResponse(response);
 };
 
 /**
- * Logout user
+ * Logout user - Clear localStorage data
+ * Note: This only clears frontend state. To properly logout and clear the HttpOnly cookie,
+ * the backend needs to provide a logout endpoint that sets the cookie MaxAge to 0.
+ * TODO: Create backend /logout endpoint and call it here
  */
 export const logout = () => {
-    localStorage.removeItem('token');
+    // Note: Token is in HttpOnly cookie, can't be removed from JS
+    // A backend endpoint is needed to clear the cookie
     localStorage.removeItem('usuario');
     localStorage.removeItem('contextosDisponibles');
     localStorage.removeItem('contextosAplanados');
@@ -141,10 +141,16 @@ export const logout = () => {
 
 /**
  * Check if user is authenticated
+ * Note: This function is deprecated when using HttpOnly cookies.
+ * Use the isAuthenticated() method from AuthContext instead (via useAuth hook).
+ * The frontend cannot access HttpOnly cookies, so authentication state
+ * is determined by the presence of user data in AuthContext.
+ * @deprecated Use useAuth().isAuthenticated() instead
  * @returns {boolean}
  */
 export const isAuthenticated = () => {
-    return !!localStorage.getItem('token');
+    console.warn('api.isAuthenticated() is deprecated. Use useAuth().isAuthenticated() instead.');
+    return false; // Always return false since we can't check HttpOnly cookies from JS
 };
 
 /**
@@ -174,6 +180,160 @@ export const getContextosDisponibles = () => {
     return contextos ? JSON.parse(contextos) : [];
 };
 
+// ==================== PERFILES API ====================
+
+/**
+ * Get all profiles with filters and pagination
+ * @param {object} params - Query parameters
+ * @param {string} params.estatus - Filter by status (A/I)
+ * @param {number} params.nivel - Filter by level (0-4)
+ * @param {string} params.search - Search by name
+ * @param {number} params.page - Page number (default: 1)
+ * @param {number} params.limit - Records per page (default: 25)
+ * @returns {Promise} Paginated list of profiles
+ */
+export const getPerfiles = async (params = {}) => {
+    const queryParams = new URLSearchParams();
+    
+    if (params.estatus) queryParams.append('estatus', params.estatus);
+    if (params.nivel !== undefined && params.nivel !== null) queryParams.append('nivel', params.nivel);
+    if (params.search) queryParams.append('search', params.search);
+    if (params.page) queryParams.append('page', params.page);
+    if (params.limit) queryParams.append('limit', params.limit);
+
+    const url = `${BASE_URL}/perfiles${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+    
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include' // Important: Include cookies in request
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Get profile by ID
+ * @param {number} id - Profile ID
+ * @returns {Promise} Profile detail with modules and permissions
+ */
+export const getPerfilById = async (id) => {
+    const response = await fetch(`${BASE_URL}/perfiles/${id}`, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include' // Important: Include cookies in request
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Create new profile
+ * @param {object} data - Profile data
+ * @param {string} data.nombre - Profile name
+ * @param {string} data.descripcion - Profile description
+ * @param {number} data.nivel - Profile level (0-4)
+ * @returns {Promise} Created profile
+ */
+export const createPerfil = async (data) => {
+    const response = await fetch(`${BASE_URL}/perfiles`, {
+        method: 'POST',
+        headers: getHeaders(),
+        credentials: 'include', // Important: Include cookies in request
+        body: JSON.stringify(data)
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Update existing profile
+ * @param {number} id - Profile ID
+ * @param {object} data - Updated profile data
+ * @param {string} data.nombre - Profile name
+ * @param {string} data.descripcion - Profile description
+ * @param {number} data.nivel - Profile level (0-4)
+ * @param {string} data.estatus - Profile status (A/I)
+ * @returns {Promise} Updated profile
+ */
+export const updatePerfil = async (id, data) => {
+    const response = await fetch(`${BASE_URL}/perfiles/${id}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        credentials: 'include', // Important: Include cookies in request
+        body: JSON.stringify(data)
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Delete profile (soft delete)
+ * @param {number} id - Profile ID
+ * @returns {Promise} Success message
+ */
+export const deletePerfil = async (id) => {
+    const response = await fetch(`${BASE_URL}/perfiles/${id}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+        credentials: 'include' // Important: Include cookies in request
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Get all modules (optionally filtered by level)
+ * @param {number} nivel - Filter by level (optional)
+ * @returns {Promise} List of modules
+ */
+export const getModulos = async (nivel = null) => {
+    const url = nivel !== null 
+        ? `${BASE_URL}/modulos?nivel=${nivel}` 
+        : `${BASE_URL}/modulos`;
+    
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include' // Important: Include cookies in request
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Assign modules to profile
+ * @param {number} perfilId - Profile ID
+ * @param {Array<number>} moduloIds - Array of module IDs to assign
+ * @returns {Promise} Assignment result
+ */
+export const asignarModulos = async (perfilId, moduloIds) => {
+    const response = await fetch(`${BASE_URL}/perfiles/${perfilId}/modulos`, {
+        method: 'POST',
+        headers: getHeaders(),
+        credentials: 'include', // Important: Include cookies in request
+        body: JSON.stringify({ moduloIds })
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Revoke module from profile
+ * @param {number} perfilId - Profile ID
+ * @param {number} moduloId - Module ID to revoke
+ * @returns {Promise} Revocation result
+ */
+export const revocarModulo = async (perfilId, moduloId) => {
+    const response = await fetch(`${BASE_URL}/perfiles/${perfilId}/modulos/${moduloId}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+        credentials: 'include' // Important: Include cookies in request
+    });
+
+    return handleResponse(response);
+};
+
 export default {
     login,
     cambiarContexto,
@@ -183,5 +343,14 @@ export default {
     isAuthenticated,
     getCurrentUser,
     getActiveContext,
-    getContextosDisponibles
+    getContextosDisponibles,
+    // Perfiles
+    getPerfiles,
+    getPerfilById,
+    createPerfil,
+    updatePerfil,
+    deletePerfil,
+    getModulos,
+    asignarModulos,
+    revocarModulo
 };

@@ -13,13 +13,13 @@ export const AuthProvider = ({ children }) => {
     // Initialize auth state from localStorage on mount
     useEffect(() => {
         const initializeAuth = () => {
-            const token = localStorage.getItem('token');
+            // Note: Token is now in HttpOnly cookie, we don't store it in localStorage
             const storedUser = api.getCurrentUser();
             const storedContextos = api.getContextosDisponibles();
             const storedActiveContext = api.getActiveContext();
             const storedPerfilId = localStorage.getItem('activePerfilId');
 
-            if (token && storedUser) {
+            if (storedUser) {
                 setUser(storedUser);
                 setContextosDisponibles(storedContextos || []);
                 setActiveContext(storedActiveContext);
@@ -42,8 +42,8 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await api.login(username, password);
 
-            // Store token
-            localStorage.setItem('token', response.token);
+            // Note: Token is now stored in HttpOnly cookie by backend
+            // We don't store it in localStorage anymore for security
             
             // Store user data
             localStorage.setItem('usuario', JSON.stringify(response.usuario));
@@ -79,8 +79,8 @@ export const AuthProvider = ({ children }) => {
             const response = await api.cambiarContexto(contextData);
             console.log('Respuesta cambio de contexto:', response);
 
-            // Update token with new one that includes context
-            localStorage.setItem('token', response.token);
+            // Note: New token is now stored in HttpOnly cookie by backend
+            // We don't store it in localStorage anymore
 
             // Store active context
             localStorage.setItem('activeContext', JSON.stringify(context));
@@ -110,9 +110,10 @@ export const AuthProvider = ({ children }) => {
 
     /**
      * Check if user is authenticated
+     * Note: Token is now in HttpOnly cookie, so we check if user data exists
      */
     const isAuthenticated = () => {
-        return !!user && !!localStorage.getItem('token');
+        return !!user;
     };
 
     /**
