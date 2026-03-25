@@ -334,6 +334,199 @@ export const revocarModulo = async (perfilId, moduloId) => {
     return handleResponse(response);
 };
 
+// ==================== ASIGNACIÓN DE PERFILES ====================
+
+/**
+ * Get users assigned to an Administradora
+ * @param {number} administradoraId - Administradora ID
+ * @returns {Promise} List of users with their profiles
+ */
+export const getAdministradoraUsuarios = async (administradoraId) => {
+    const response = await fetch(`${BASE_URL}/administradoras/${administradoraId}/usuarios`, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Get users assigned to a Conjunto
+ * @param {number} conjuntoId - Conjunto ID
+ * @returns {Promise} List of users with their profiles
+ */
+export const getConjuntoUsuarios = async (conjuntoId) => {
+    const response = await fetch(`${BASE_URL}/conjuntos/${conjuntoId}/usuarios`, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Assign profiles to a user in an Administradora
+ * @param {number} administradoraId - Administradora ID
+ * @param {number} usuarioId - User ID
+ * @param {object} data - { perfiles: [perfilId1, perfilId2] }
+ * @returns {Promise} Assignment result
+ */
+export const asignarPerfilesAdministradora = async (administradoraId, usuarioId, data) => {
+    const response = await fetch(`${BASE_URL}/administradoras/${administradoraId}/usuarios/${usuarioId}/perfiles`, {
+        method: 'POST',
+        headers: getHeaders(),
+        credentials: 'include',
+        body: JSON.stringify(data)
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Assign profiles to a user in a Conjunto
+ * @param {number} conjuntoId - Conjunto ID
+ * @param {number} usuarioId - User ID
+ * @param {object} data - { perfiles: [perfilId1, perfilId2] }
+ * @returns {Promise} Assignment result
+ */
+export const asignarPerfilesConjunto = async (conjuntoId, usuarioId, data) => {
+    const response = await fetch(`${BASE_URL}/conjuntos/${conjuntoId}/usuarios/${usuarioId}/perfiles`, {
+        method: 'POST',
+        headers: getHeaders(),
+        credentials: 'include',
+        body: JSON.stringify(data)
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Remove a profile from a user in an Administradora
+ * @param {number} administradoraId - Administradora ID
+ * @param {number} usuarioId - User ID
+ * @param {number} perfilId - Profile ID to remove
+ * @returns {Promise} Removal result
+ */
+export const removerPerfilAdministradora = async (administradoraId, usuarioId, perfilId) => {
+    const response = await fetch(`${BASE_URL}/administradoras/${administradoraId}/usuarios/${usuarioId}/perfiles/${perfilId}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Remove a profile from a user in a Conjunto
+ * @param {number} conjuntoId - Conjunto ID
+ * @param {number} usuarioId - User ID
+ * @param {number} perfilId - Profile ID to remove
+ * @returns {Promise} Removal result
+ */
+export const removerPerfilConjunto = async (conjuntoId, usuarioId, perfilId) => {
+    const response = await fetch(`${BASE_URL}/conjuntos/${conjuntoId}/usuarios/${usuarioId}/perfiles/${perfilId}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Get all profiles of a user across all contexts
+ * @param {number} usuarioId - User ID
+ * @returns {Promise} User profiles grouped by context
+ */
+export const getUsuarioPerfiles = async (usuarioId) => {
+    const response = await fetch(`${BASE_URL}/usuarios/${usuarioId}/perfiles`, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+
+    return handleResponse(response);
+};
+
+// ==================== AUXILIARY METHODS ====================
+
+/**
+ * Get all users with filters and pagination
+ * @param {object} params - Query parameters
+ * @param {string} params.search - Search by name, document or email
+ * @param {string} params.estatus - Filter by status (A/I)
+ * @param {number} params.page - Page number (default: 1)
+ * @param {number} params.limit - Records per page (default: 25)
+ * @returns {Promise} Paginated list of users
+ */
+export const getUsuarios = async (params = {}) => {
+    const queryParams = new URLSearchParams();
+    
+    if (params.search) queryParams.append('search', params.search);
+    if (params.estatus) queryParams.append('estatus', params.estatus);
+    if (params.page) queryParams.append('page', params.page);
+    if (params.limit) queryParams.append('limit', params.limit);
+
+    const queryString = queryParams.toString();
+    const url = queryString ? `${BASE_URL}/usuarios?${queryString}` : `${BASE_URL}/usuarios`;
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Get user by ID
+ * @param {number} usuarioId - User ID
+ * @returns {Promise} User details
+ */
+export const getUsuarioById = async (usuarioId) => {
+    const response = await fetch(`${BASE_URL}/usuarios/${usuarioId}`, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Get Administradora by ID
+ * @param {number} administradoraId - Administradora ID
+ * @returns {Promise} Administradora details
+ */
+export const getAdministradoraById = async (administradoraId) => {
+    const response = await fetch(`${BASE_URL}/administradoras/${administradoraId}`, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Get Conjunto by ID
+ * @param {number} conjuntoId - Conjunto ID
+ * @returns {Promise} Conjunto details
+ */
+export const getConjuntoById = async (conjuntoId) => {
+    const response = await fetch(`${BASE_URL}/conjuntos/${conjuntoId}`, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+
+    return handleResponse(response);
+};
+
 export default {
     login,
     cambiarContexto,
@@ -352,5 +545,18 @@ export default {
     deletePerfil,
     getModulos,
     asignarModulos,
-    revocarModulo
+    revocarModulo,
+    // Asignación de Perfiles
+    getAdministradoraUsuarios,
+    getConjuntoUsuarios,
+    asignarPerfilesAdministradora,
+    asignarPerfilesConjunto,
+    removerPerfilAdministradora,
+    removerPerfilConjunto,
+    getUsuarioPerfiles,
+    // Auxiliary
+    getUsuarios,
+    getUsuarioById,
+    getAdministradoraById,
+    getConjuntoById
 };

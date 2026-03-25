@@ -12,6 +12,11 @@ import PropertiesPage from "./pages/PropertiesPage.jsx";
 import PerfilesPage from "./pages/perfiles/PerfilesPage.jsx";
 import PerfilFormPage from "./pages/perfiles/PerfilFormPage.jsx";
 import PerfilDetailPage from "./pages/perfiles/PerfilDetailPage.jsx";
+import UsuariosPage from "./pages/UsuariosPage.jsx";
+import AdministradoraUsuariosPage from "./pages/asignaciones/AdministradoraUsuariosPage.jsx";
+import ConjuntoUsuariosPage from "./pages/asignaciones/ConjuntoUsuariosPage.jsx";
+import AsignarPerfilesPage from "./pages/asignaciones/AsignarPerfilesPage.jsx";
+import UsuarioPerfilesPage from "./pages/asignaciones/UsuarioPerfilesPage.jsx";
 
 function InnerApp() {
     // const navigate = useNavigate()
@@ -56,6 +61,22 @@ function InnerApp() {
                     <Route path="perfiles/nuevo" element={<PerfilFormPage />} />
                     <Route path="perfiles/:id" element={<PerfilDetailPage />} />
                     <Route path="perfiles/:id/editar" element={<PerfilFormPage />} />
+                    
+                    {/* Usuarios */}
+                    <Route path="usuarios" element={<UsuariosPage />} />
+                    <Route path="usuarios/list" element={<UsuariosPage />} />
+                    
+                    {/* Asignación de Perfiles - Administradoras */}
+                    <Route path="administradoras/:id/usuarios" element={<AdministradoraUsuariosPage />} />
+
+                    {/* Asignación de Perfiles - Conjuntos */}
+                    <Route path="conjuntos/:id/usuarios" element={<ConjuntoUsuariosPage />} />
+
+                    {/* Gestión de perfiles por contexto (administradora o conjunto) */}
+                    <Route path=":contextType/:contextId/usuarios/:usuarioId/perfiles" element={<AsignarPerfilesPage />} />
+                    
+                    {/* Vista Global de Perfiles de Usuario */}
+                    <Route path="usuarios/:usuarioId/perfiles" element={<UsuarioPerfilesPage />} />
                     
                     {/* Specific page implementations (add more as needed) */}
                     <Route path="propiedades" element={<PropertiesPage />} />
