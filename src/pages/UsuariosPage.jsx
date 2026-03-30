@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { getUsuarios } from '../services/api';
+import { getUsuarios, deleteUsuario } from '../services/api';
 import { showToast } from '../components/common/Toast';
 
 const UsuariosPage = () => {
@@ -25,13 +25,24 @@ const UsuariosPage = () => {
       const params = {};
       if (searchTerm) params.search = searchTerm;
       if (filtroEstatus) params.estatus = filtroEstatus;
-      
+
       const response = await getUsuarios(params);
       setUsuarios(response.data || []);
     } catch (error) {
       showToast(error.message || 'Error al cargar usuarios', 'error');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleInactivar = async (usuario) => {
+    if (!window.confirm(`¿Inactivar al usuario "${usuario.nombre} ${usuario.apellido}"?`)) return;
+    try {
+      await deleteUsuario(usuario.id);
+      showToast('Usuario inactivado correctamente', 'success');
+      fetchUsuarios();
+    } catch (error) {
+      showToast(error.message || 'Error al inactivar usuario', 'error');
     }
   };
 
@@ -140,7 +151,7 @@ const UsuariosPage = () => {
                         <th>Email</th>
                         <th>Teléfono</th>
                         <th>Estatus</th>
-                        <th width="100">Acciones</th>
+                        <th width="160">Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -170,13 +181,28 @@ const UsuariosPage = () => {
                             </span>
                           </td>
                           <td>
-                            <div className="btn-group">
+                            <div className="btn-group btn-group-sm">
                               <button
-                                className="btn btn-sm btn-info"
+                                className="btn btn-info"
                                 onClick={() => navigate(`/dashboard/usuarios/${usuario.id}/perfiles`)}
                                 title="Gestionar Perfiles"
                               >
                                 <i className="fas fa-user-shield"></i>
+                              </button>
+                              <button
+                                className="btn btn-primary"
+                                onClick={() => navigate(`/dashboard/usuarios/${usuario.id}/editar`)}
+                                title="Editar usuario"
+                              >
+                                <i className="fas fa-edit"></i>
+                              </button>
+                              <button
+                                className="btn btn-danger"
+                                onClick={() => handleInactivar(usuario)}
+                                title="Inactivar usuario"
+                                disabled={usuario.estatus === 'I'}
+                              >
+                                <i className="fas fa-ban"></i>
                               </button>
                             </div>
                           </td>

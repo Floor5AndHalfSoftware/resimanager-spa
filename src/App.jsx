@@ -13,6 +13,9 @@ import PerfilesPage from "./pages/perfiles/PerfilesPage.jsx";
 import PerfilFormPage from "./pages/perfiles/PerfilFormPage.jsx";
 import PerfilDetailPage from "./pages/perfiles/PerfilDetailPage.jsx";
 import UsuariosPage from "./pages/UsuariosPage.jsx";
+import UsuarioFormPage from "./pages/UsuarioFormPage.jsx";
+import AdministradorasPage from "./pages/AdministradorasPage.jsx";
+import ConjuntosPage from "./pages/ConjuntosPage.jsx";
 import AdministradoraUsuariosPage from "./pages/asignaciones/AdministradoraUsuariosPage.jsx";
 import ConjuntoUsuariosPage from "./pages/asignaciones/ConjuntoUsuariosPage.jsx";
 import AsignarPerfilesPage from "./pages/asignaciones/AsignarPerfilesPage.jsx";
@@ -65,11 +68,14 @@ function InnerApp() {
                     {/* Usuarios */}
                     <Route path="usuarios" element={<UsuariosPage />} />
                     <Route path="usuarios/list" element={<UsuariosPage />} />
-                    
-                    {/* Asignación de Perfiles - Administradoras */}
+                    <Route path="usuarios/:id/editar" element={<UsuarioFormPage />} />
+
+                    {/* Administradoras */}
+                    <Route path="administradoras" element={<AdministradorasPage />} />
                     <Route path="administradoras/:id/usuarios" element={<AdministradoraUsuariosPage />} />
 
-                    {/* Asignación de Perfiles - Conjuntos */}
+                    {/* Conjuntos */}
+                    <Route path="conjuntos" element={<ConjuntosPage />} />
                     <Route path="conjuntos/:id/usuarios" element={<ConjuntoUsuariosPage />} />
 
                     {/* Gestión de perfiles por contexto (administradora o conjunto) */}

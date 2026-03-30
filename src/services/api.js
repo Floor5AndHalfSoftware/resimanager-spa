@@ -498,12 +498,94 @@ export const getUsuarioById = async (usuarioId) => {
 };
 
 /**
+ * Update user
+ * @param {number} usuarioId - User ID
+ * @param {object} data - Fields to update: nombre, apellido, telefono, email, estatus
+ * @returns {Promise} Updated user
+ */
+export const updateUsuario = async (usuarioId, data) => {
+    const response = await fetch(`${BASE_URL}/usuarios/${usuarioId}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        credentials: 'include',
+        body: JSON.stringify(data)
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Inactivate user (soft delete)
+ * @param {number} usuarioId - User ID
+ * @returns {Promise} Result message
+ */
+export const deleteUsuario = async (usuarioId) => {
+    const response = await fetch(`${BASE_URL}/usuarios/${usuarioId}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Get all administradoras with filters and pagination
+ * @param {object} params - Query parameters: search, estatus, page, limit
+ * @returns {Promise} Paginated list of administradoras
+ */
+export const getAdministradoras = async (params = {}) => {
+    const queryParams = new URLSearchParams();
+
+    if (params.search) queryParams.append('search', params.search);
+    if (params.estatus) queryParams.append('estatus', params.estatus);
+    if (params.page) queryParams.append('page', params.page);
+    if (params.limit) queryParams.append('limit', params.limit);
+
+    const queryString = queryParams.toString();
+    const url = queryString ? `${BASE_URL}/administradoras?${queryString}` : `${BASE_URL}/administradoras`;
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+
+    return handleResponse(response);
+};
+
+/**
  * Get Administradora by ID
  * @param {number} administradoraId - Administradora ID
  * @returns {Promise} Administradora details
  */
 export const getAdministradoraById = async (administradoraId) => {
     const response = await fetch(`${BASE_URL}/administradoras/${administradoraId}`, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Get all conjuntos with filters and pagination
+ * @param {object} params - Query parameters: search, estatus, page, limit
+ * @returns {Promise} Paginated list of conjuntos
+ */
+export const getConjuntos = async (params = {}) => {
+    const queryParams = new URLSearchParams();
+
+    if (params.search) queryParams.append('search', params.search);
+    if (params.estatus) queryParams.append('estatus', params.estatus);
+    if (params.page) queryParams.append('page', params.page);
+    if (params.limit) queryParams.append('limit', params.limit);
+
+    const queryString = queryParams.toString();
+    const url = queryString ? `${BASE_URL}/conjuntos?${queryString}` : `${BASE_URL}/conjuntos`;
+
+    const response = await fetch(url, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include'
@@ -554,9 +636,15 @@ export default {
     removerPerfilAdministradora,
     removerPerfilConjunto,
     getUsuarioPerfiles,
-    // Auxiliary
+    // Usuarios
     getUsuarios,
     getUsuarioById,
+    updateUsuario,
+    deleteUsuario,
+    // Administradoras
+    getAdministradoras,
     getAdministradoraById,
+    // Conjuntos
+    getConjuntos,
     getConjuntoById
 };
