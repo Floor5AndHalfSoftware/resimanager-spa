@@ -123,14 +123,20 @@ export const getAllMenus = async () => {
 };
 
 /**
- * Logout user - Clear localStorage data
- * Note: This only clears frontend state. To properly logout and clear the HttpOnly cookie,
- * the backend needs to provide a logout endpoint that sets the cookie MaxAge to 0.
- * TODO: Create backend /logout endpoint and call it here
+ * Logout user - Clear session on server and localStorage
+ * Calls backend to clear the HttpOnly cookie, then clears frontend state.
+ * @returns {Promise} Server response
  */
-export const logout = () => {
-    // Note: Token is in HttpOnly cookie, can't be removed from JS
-    // A backend endpoint is needed to clear the cookie
+export const logout = async () => {
+    try {
+        await fetch(`${BASE_URL}/logout`, {
+            method: 'POST',
+            headers: getHeaders(),
+            credentials: 'include'
+        });
+    } catch (e) {
+        console.warn('Logout API call failed (may be offline):', e.message);
+    }
     localStorage.removeItem('usuario');
     localStorage.removeItem('contextosDisponibles');
     localStorage.removeItem('contextosAplanados');
@@ -609,6 +615,100 @@ export const getConjuntoById = async (conjuntoId) => {
     return handleResponse(response);
 };
 
+// ==================== PROPIETARIOS API ====================
+
+/**
+ * Get all propietarios with filters and pagination
+ * @param {object} params - Query parameters: search, estatus, conjuntoId, page, limit
+ * @returns {Promise} Paginated list of propietarios
+ */
+export const getPropietarios = async (params = {}) => {
+    const queryParams = new URLSearchParams();
+
+    if (params.search) queryParams.append('search', params.search);
+    if (params.estatus) queryParams.append('estatus', params.estatus);
+    if (params.conjuntoId) queryParams.append('conjuntoId', params.conjuntoId);
+    if (params.page) queryParams.append('page', params.page);
+    if (params.limit) queryParams.append('limit', params.limit);
+
+    const queryString = queryParams.toString();
+    const url = queryString ? `${BASE_URL}/propietarios?${queryString}` : `${BASE_URL}/propietarios`;
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Get propietario by composite ID (conjunto + persona)
+ * @param {number} conjId - Conjunto ID
+ * @param {number} perId - Persona ID
+ * @returns {Promise} Propietario details
+ */
+export const getPropietarioById = async (conjId, perId) => {
+    const response = await fetch(`${BASE_URL}/propietarios/${conjId}/${perId}`, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Create a new propietario
+ * @param {object} data - { conjId, perId, propiedadId, fechaDesde }
+ * @returns {Promise} Created propietario
+ */
+export const createPropietario = async (data) => {
+    const response = await fetch(`${BASE_URL}/propietarios`, {
+        method: 'POST',
+        headers: getHeaders(),
+        credentials: 'include',
+        body: JSON.stringify(data)
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Update a propietario
+ * @param {number} conjId - Conjunto ID
+ * @param {number} perId - Persona ID
+ * @param {object} data - { propiedadId, fechaDesde, fechaHasta, estatus }
+ * @returns {Promise} Updated propietario
+ */
+export const updatePropietario = async (conjId, perId, data) => {
+    const response = await fetch(`${BASE_URL}/propietarios/${conjId}/${perId}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        credentials: 'include',
+        body: JSON.stringify(data)
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Inactivate a propietario (soft delete)
+ * @param {number} conjId - Conjunto ID
+ * @param {number} perId - Persona ID
+ * @returns {Promise} Result message
+ */
+export const deletePropietario = async (conjId, perId) => {
+    const response = await fetch(`${BASE_URL}/propietarios/${conjId}/${perId}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+
+    return handleResponse(response);
+};
+
 export default {
     login,
     cambiarContexto,
@@ -646,5 +746,11 @@ export default {
     getAdministradoraById,
     // Conjuntos
     getConjuntos,
-    getConjuntoById
+    getConjuntoById,
+    // Propietarios
+    getPropietarios,
+    getPropietarioById,
+    createPropietario,
+    updatePropietario,
+    deletePropietario
 };
