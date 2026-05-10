@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { 
   getUsuarioById,
   getAdministradoraById,
@@ -13,6 +13,7 @@ import {
   removerPerfilConjunto
 } from '../../services/api';
 import { showToast } from '../../components/common/Toast';
+import PageLayout from '../../components/common/PageLayout';
 
 const AsignarPerfilesPage = () => {
   const { contextType, contextId, usuarioId } = useParams();
@@ -158,41 +159,15 @@ const AsignarPerfilesPage = () => {
   }
 
   return (
-    <div className="content-wrapper">
-      {/* Content Header */}
-      <section className="content-header">
-        <div className="container-fluid">
-          <div className="row mb-2">
-            <div className="col-sm-6">
-              <h1>Gestionar Perfiles</h1>
-            </div>
-            <div className="col-sm-6">
-              <ol className="breadcrumb float-sm-right">
-                <li className="breadcrumb-item">
-                  <Link to="/dashboard">Inicio</Link>
-                </li>
-                <li className="breadcrumb-item">
-                  <Link to={`/dashboard/${contextType}s`}>
-                    {isAdministradora ? 'Administradoras' : 'Conjuntos'}
-                  </Link>
-                </li>
-                <li className="breadcrumb-item">
-                  <Link to={`/dashboard/${contextType}s/${contextId}/usuarios`}>
-                    Usuarios
-                  </Link>
-                </li>
-                <li className="breadcrumb-item active">Gestionar Perfiles</li>
-              </ol>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="content">
-        <div className="container-fluid">
-          
-          {/* Usuario Info Card */}
+    <PageLayout
+      title="Gestionar Perfiles"
+      breadcrumbs={[
+        { label: isAdministradora ? 'Administradoras' : 'Conjuntos', path: `/dashboard/${contextType}s` },
+        { label: 'Usuarios', path: `/dashboard/${contextType}s/${contextId}/usuarios` },
+        { label: 'Gestionar Perfiles' }
+      ]}
+    >
+      {/* Usuario Info Card */}
           <div className="card card-primary card-outline">
             <div className="card-header">
               <h3 className="card-title">
@@ -354,9 +329,7 @@ const AsignarPerfilesPage = () => {
             </div>
           </div>
 
-        </div>
-      </section>
-    </div>
+    </PageLayout>
   );
 };
 

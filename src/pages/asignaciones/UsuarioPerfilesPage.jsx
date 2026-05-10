@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getUsuarioPerfiles } from '../../services/api';
 import { showToast } from '../../components/common/Toast';
+import PageLayout from '../../components/common/PageLayout';
 
 const UsuarioPerfilesPage = () => {
   const { usuarioId } = useParams();
@@ -46,34 +47,14 @@ const UsuarioPerfilesPage = () => {
   const conjuntos = data?.contextos?.filter(c => c.tipo === 'CONJUNTO') || [];
 
   return (
-    <div className="content-wrapper">
-      {/* Content Header */}
-      <section className="content-header">
-        <div className="container-fluid">
-          <div className="row mb-2">
-            <div className="col-sm-6">
-              <h1>Perfiles del Usuario</h1>
-            </div>
-            <div className="col-sm-6">
-              <ol className="breadcrumb float-sm-right">
-                <li className="breadcrumb-item">
-                  <Link to="/dashboard">Inicio</Link>
-                </li>
-                <li className="breadcrumb-item">
-                  <Link to="/dashboard/usuarios">Usuarios</Link>
-                </li>
-                <li className="breadcrumb-item active">Perfiles</li>
-              </ol>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="content">
-        <div className="container-fluid">
-          
-          {/* Usuario Info */}
+    <PageLayout
+      title="Perfiles del Usuario"
+      breadcrumbs={[
+        { label: 'Usuarios', path: '/dashboard/usuarios' },
+        { label: 'Perfiles' }
+      ]}
+    >
+      {/* Usuario Info */}
           <div className="card card-primary card-outline">
             <div className="card-body">
               <h4>
@@ -188,9 +169,7 @@ const UsuarioPerfilesPage = () => {
             Volver a Usuarios
           </button>
 
-        </div>
-      </section>
-    </div>
+    </PageLayout>
   );
 };
 
