@@ -84,9 +84,10 @@ function InnerApp() {
                     {/* Vista Global de Perfiles de Usuario */}
                     <Route path="usuarios/:usuarioId/perfiles" element={<UsuarioPerfilesPage />} />
                     
-                    {/* Specific page implementations (add more as needed) */}
-                    <Route path="propiedades" element={<PropertiesPage />} />
-                    <Route path="propiedad/:method" element={<PropertiesPage />} />
+                    {/* Propietarios */}
+                    <Route path="propietarios" element={<PropertiesPage />} />
+                    <Route path="propietarios/list" element={<PropertiesPage />} />
+                    <Route path="propietario/:method" element={<PropertiesPage />} />
                     
                     {/* Generic route for controller/method pattern */}
                     <Route path=":controller/:method" element={<GenericPage />} />
