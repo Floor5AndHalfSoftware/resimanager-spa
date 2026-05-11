@@ -615,6 +615,54 @@ export const getConjuntoById = async (conjuntoId) => {
     return handleResponse(response);
 };
 
+/**
+ * Create a new conjunto
+ * @param {object} data - { documento, nombre, telefono, email, persContactoId }
+ * @returns {Promise} Created conjunto
+ */
+export const createConjunto = async (data) => {
+    const response = await fetch(`${BASE_URL}/conjuntos`, {
+        method: 'POST',
+        headers: getHeaders(),
+        credentials: 'include',
+        body: JSON.stringify(data)
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Update an existing conjunto
+ * @param {number} id - Conjunto ID
+ * @param {object} data - { documento?, nombre?, telefono?, email?, persContactoId?, estatus? }
+ * @returns {Promise} Updated conjunto
+ */
+export const updateConjunto = async (id, data) => {
+    const response = await fetch(`${BASE_URL}/conjuntos/${id}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        credentials: 'include',
+        body: JSON.stringify(data)
+    });
+
+    return handleResponse(response);
+};
+
+/**
+ * Inactivate (soft-delete) a conjunto
+ * @param {number} id - Conjunto ID
+ * @returns {Promise} Result message
+ */
+export const deleteConjunto = async (id) => {
+    const response = await fetch(`${BASE_URL}/conjuntos/${id}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+
+    return handleResponse(response);
+};
+
 // ==================== PROPIETARIOS API ====================
 
 /**
@@ -815,6 +863,9 @@ export default {
     // Conjuntos
     getConjuntos,
     getConjuntoById,
+    createConjunto,
+    updateConjunto,
+    deleteConjunto,
     // Propietarios
     getPropietarios,
     getPropietarioById,

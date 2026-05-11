@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageLayout from '../components/common/PageLayout';
 import DataTable from '../components/common/DataTable';
-import { getConjuntos } from '../services/api';
+import { getConjuntos, deleteConjunto } from '../services/api';
 import { showToast } from '../components/common/Toast';
 
 const ConjuntosPage = () => {
@@ -35,6 +35,17 @@ const ConjuntosPage = () => {
       showToast(error.message || 'Error al cargar conjuntos', 'error');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('¿Inactivar este conjunto?')) return;
+    try {
+      await deleteConjunto(id);
+      showToast('Conjunto inactivado correctamente', 'success');
+      loadConjuntos();
+    } catch (err) {
+      showToast(err.message || 'Error al inactivar conjunto', 'error');
     }
   };
 
@@ -71,17 +82,23 @@ const ConjuntosPage = () => {
     {
       key: 'actions',
       label: 'Acciones',
-      width: '100px',
+      width: '180px',
       align: 'center',
       render: (value, conj) => (
-        <button
-          className="btn btn-sm btn-success"
-          onClick={() => navigate(`/dashboard/conjuntos/${conj.id}/usuarios`)}
-          title="Ver usuarios de este conjunto"
-        >
-          <i className="fas fa-users mr-1"></i>
-          Usuarios
-        </button>
+        <div className="btn-group">
+          <button className="btn btn-sm btn-info" title="Editar"
+            onClick={() => navigate(`/dashboard/conjuntos/${conj.id}/editar`)}>
+            <i className="fas fa-edit"></i>
+          </button>
+          <button className="btn btn-sm btn-success" title="Ver usuarios"
+            onClick={() => navigate(`/dashboard/conjuntos/${conj.id}/usuarios`)}>
+            <i className="fas fa-users"></i>
+          </button>
+          <button className="btn btn-sm btn-danger" title="Inactivar"
+            onClick={() => handleDelete(conj.id)}>
+            <i className="fas fa-trash"></i>
+          </button>
+        </div>
       )
     }
   ];
@@ -96,6 +113,12 @@ const ConjuntosPage = () => {
                 <i className="fas fa-home mr-2"></i>
                 Lista de Conjuntos
               </h3>
+            </div>
+            <div className="col-md-6 text-right">
+              <button className="btn btn-primary btn-sm" onClick={() => navigate('/dashboard/conjuntos/nuevo')}>
+                <i className="fas fa-plus mr-1"></i>
+                Nuevo Conjunto
+              </button>
             </div>
           </div>
         </div>
