@@ -9,6 +9,7 @@ import FormShowcase from "./pages/FormShowcase.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import GenericPage from "./pages/GenericPage.jsx";
 import PropertiesPage from "./pages/PropertiesPage.jsx";
+import PropiedadesPage from "./pages/PropiedadesPage.jsx";
 import PerfilesPage from "./pages/perfiles/PerfilesPage.jsx";
 import PerfilFormPage from "./pages/perfiles/PerfilFormPage.jsx";
 import PerfilDetailPage from "./pages/perfiles/PerfilDetailPage.jsx";
@@ -88,6 +89,10 @@ function InnerApp() {
                     <Route path="propietarios" element={<PropertiesPage />} />
                     <Route path="propietarios/list" element={<PropertiesPage />} />
                     <Route path="propietario/:method" element={<PropertiesPage />} />
+
+                    {/* Propiedades */}
+                    <Route path="propiedades" element={<PropiedadesPage />} />
+                    <Route path="propiedades/list" element={<PropiedadesPage />} />
                     
                     {/* Generic route for controller/method pattern */}
                     <Route path=":controller/:method" element={<GenericPage />} />

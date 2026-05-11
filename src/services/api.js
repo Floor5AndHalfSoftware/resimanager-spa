@@ -709,6 +709,65 @@ export const deletePropietario = async (conjId, perId) => {
     return handleResponse(response);
 };
 
+// ==================== Propiedades ====================
+
+export const getPropiedades = async (params = {}) => {
+    const queryParams = new URLSearchParams();
+    if (params.search) queryParams.append('search', params.search);
+    if (params.estatus) queryParams.append('estatus', params.estatus);
+    if (params.conjuntoId) queryParams.append('conjuntoId', params.conjuntoId);
+    if (params.page) queryParams.append('page', params.page);
+    if (params.limit) queryParams.append('limit', params.limit);
+
+    const queryString = queryParams.toString();
+    const url = queryString ? `${BASE_URL}/propiedades?${queryString}` : `${BASE_URL}/propiedades`;
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+    return handleResponse(response);
+};
+
+export const getPropiedadById = async (id) => {
+    const response = await fetch(`${BASE_URL}/propiedades/${id}`, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+    return handleResponse(response);
+};
+
+export const createPropiedad = async (data) => {
+    const response = await fetch(`${BASE_URL}/propiedades`, {
+        method: 'POST',
+        headers: getHeaders(),
+        credentials: 'include',
+        body: JSON.stringify(data)
+    });
+    return handleResponse(response);
+};
+
+export const updatePropiedad = async (id, data) => {
+    const response = await fetch(`${BASE_URL}/propiedades/${id}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        credentials: 'include',
+        body: JSON.stringify(data)
+    });
+    return handleResponse(response);
+};
+
+export const deletePropiedad = async (id) => {
+    const response = await fetch(`${BASE_URL}/propiedades/${id}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+    return handleResponse(response);
+};
+
 export default {
     login,
     cambiarContexto,
@@ -752,5 +811,11 @@ export default {
     getPropietarioById,
     createPropietario,
     updatePropietario,
-    deletePropietario
+    deletePropietario,
+    // Propiedades
+    getPropiedades,
+    getPropiedadById,
+    createPropiedad,
+    updatePropiedad,
+    deletePropiedad
 };
