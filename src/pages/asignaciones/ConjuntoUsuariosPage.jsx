@@ -45,33 +45,33 @@ const ConjuntoUsuariosPage = () => {
     { key: 'documento', label: 'Documento', render: (_, row) => row.persona.documento },
     { key: 'email', label: 'Email', render: (_, row) => row.persona.email },
     {
-      key: 'perfiles',
-      label: 'Perfiles',
-      render: (perfiles) => (
-        perfiles && perfiles.length > 0
-          ? perfiles.map(p => <span key={p.id} className="badge badge-info mr-1">{p.nombre}</span>)
-          : <span className="text-muted">Sin perfiles</span>
-      )
-    },
-    {
       key: 'estatus',
       label: 'Estatus',
-      render: (value) => (
-        <span className={`badge badge-${value === 'A' ? 'success' : 'secondary'}`}>
-          {value === 'A' ? 'Activo' : 'Inactivo'}
+      render: (_, row) => (
+        <span className={`badge badge-${row.persona.estatus === 'A' ? 'success' : 'secondary'}`}>
+          {row.persona.estatus === 'A' ? 'Activo' : 'Inactivo'}
         </span>
       )
     },
   ];
 
   const renderActions = (row) => (
-    <button
-      className="btn btn-sm btn-success"
-      onClick={() => navigate(`/dashboard/conjunto/${id}/usuarios/${row.persona.id}/perfiles`)}
-      title="Gestionar Perfiles"
-    >
-      <i className="fas fa-user-shield"></i>
-    </button>
+    <div className="btn-group">
+      <button
+        className="btn btn-sm btn-info"
+        onClick={() => navigate(`/dashboard/conjunto/${id}/usuarios/${row.persona.id}/perfiles`)}
+        title="Gestionar Perfiles"
+      >
+        <i className="fas fa-user-shield"></i>
+      </button>
+      <button
+        className="btn btn-sm btn-primary"
+        onClick={() => navigate(`/dashboard/usuarios/${row.persona.id}/editar`)}
+        title="Ver Usuario"
+      >
+        <i className="fas fa-user"></i>
+      </button>
+    </div>
   );
 
   return (
