@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getUsuarioPerfiles } from '../../services/api';
 import { showToast } from '../../components/common/Toast';
 import PageLayout from '../../components/common/PageLayout';
