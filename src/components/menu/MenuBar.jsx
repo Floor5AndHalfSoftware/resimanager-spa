@@ -69,21 +69,6 @@ const MenuBar = ({ toggleSidebar }) => {
                     </li>
                 )}
 
-                {/* Navbar Search */}
-                <li className="nav-item">
-                    <a className="nav-link" href="#" role="button" onClick={handleLinkClick}>
-                        <i className="fas fa-search"></i>
-                    </a>
-                </li>
-
-                {/* Messages Dropdown Menu */}
-                <li className="nav-item">
-                    <a className="nav-link" href="#" onClick={handleLinkClick}>
-                        <i className="far fa-comments"></i>
-                        <span className="badge badge-danger navbar-badge">3</span>
-                    </a>
-                </li>
-
                 {/* Notifications Dropdown Menu */}
                 <li className="nav-item">
                     <a className="nav-link" href="#" onClick={handleLinkClick}>
