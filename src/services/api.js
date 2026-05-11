@@ -711,6 +711,15 @@ export const deletePropietario = async (conjId, perId) => {
 
 // ==================== Propiedades ====================
 
+export const getClasesPropiedad = async () => {
+    const response = await fetch(`${BASE_URL}/propiedades/clases`, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+    return handleResponse(response);
+};
+
 export const getPropiedades = async (params = {}) => {
     const queryParams = new URLSearchParams();
     if (params.search) queryParams.append('search', params.search);
@@ -813,6 +822,7 @@ export default {
     updatePropietario,
     deletePropietario,
     // Propiedades
+    getClasesPropiedad,
     getPropiedades,
     getPropiedadById,
     createPropiedad,

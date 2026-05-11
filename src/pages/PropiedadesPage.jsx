@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageLayout from '../components/common/PageLayout';
 import DataTable from '../components/common/DataTable';
 import { getPropiedades, deletePropiedad } from '../services/api';
 import { showToast } from '../components/common/Toast';
 
 const PropiedadesPage = () => {
+  const navigate = useNavigate();
+
   const [propiedades, setPropiedades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({ page: 1, limit: 25, total: 0, totalPages: 0 });
@@ -12,7 +15,7 @@ const PropiedadesPage = () => {
 
   useEffect(() => {
     loadPropiedades();
-  }, [pagination.page]);
+  }, [pagination.page, filters]);
 
   const loadPropiedades = async () => {
     setLoading(true);
@@ -38,11 +41,6 @@ const PropiedadesPage = () => {
   const handleFilterChange = (field, value) => {
     setFilters(prev => ({ ...prev, [field]: value }));
     setPagination(prev => ({ ...prev, page: 1 }));
-  };
-
-  const handleSearch = () => {
-    setPagination(prev => ({ ...prev, page: 1 }));
-    loadPropiedades();
   };
 
   const handleDelete = async (id) => {
@@ -84,13 +82,13 @@ const PropiedadesPage = () => {
     {
       key: 'actions',
       label: 'Acciones',
-      width: '100px',
+      width: '140px',
       align: 'center',
       render: (value, prop) => (
         <div className="btn-group">
-          <button className="btn btn-sm btn-info" title="Ver"
-            onClick={() => alert(`Ver propiedad: ${prop.ppNumero}`)}>
-            <i className="fas fa-eye"></i>
+          <button className="btn btn-sm btn-info" title="Editar"
+            onClick={() => navigate(`/dashboard/propiedades/${prop.ppid}/editar`)}>
+            <i className="fas fa-edit"></i>
           </button>
           <button className="btn btn-sm btn-danger" title="Inactivar"
             onClick={() => handleDelete(prop.ppid)}>
@@ -102,59 +100,100 @@ const PropiedadesPage = () => {
   ];
 
   return (
-    <PageLayout title="Gestión de Propiedades" breadcrumbs={[{ label: 'Propiedades' }]}>
-      <div className="row">
-        <div className="col-12">
-          <div className="card">
-            <div className="card-header">
-              <h3 className="card-title">Lista de Propiedades</h3>
-              <div className="card-tools">
-                <div className="input-group input-group-sm" style={{ width: 300 }}>
-                  <input type="text" className="form-control float-right"
+    <PageLayout title="Gestión de Propiedades" subtitle="Listado de propiedades registradas">
+      <div className="card">
+        <div className="card-header">
+          <div className="row">
+            <div className="col-md-6">
+              <h3 className="card-title">
+                <i className="fas fa-building mr-2"></i>
+                Lista de Propiedades
+              </h3>
+            </div>
+            <div className="col-md-6 text-right">
+              <button className="btn btn-primary btn-sm" onClick={() => navigate('/dashboard/propiedades/nuevo')}>
+                <i className="fas fa-plus mr-1"></i>
+                Nueva Propiedad
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="card-body">
+          <form onSubmit={(e) => { e.preventDefault(); setPagination(prev => ({ ...prev, page: 1 })); }} className="mb-3">
+            <div className="row">
+              <div className="col-md-6">
+                <div className="input-group">
+                  <input type="text" className="form-control"
                     placeholder="Buscar por número..."
                     value={filters.search}
-                    onChange={(e) => handleFilterChange('search', e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()} />
-                  <select className="form-control ml-2" style={{ width: 100 }}
-                    value={filters.estatus}
-                    onChange={(e) => handleFilterChange('estatus', e.target.value)}>
-                    <option value="">Todos</option>
-                    <option value="A">Activos</option>
-                    <option value="I">Inactivos</option>
-                  </select>
-                  <div className="input-group-append ml-2">
-                    <button type="button" className="btn btn-default" onClick={handleSearch}>
+                    onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))} />
+                  <div className="input-group-append">
+                    <button className="btn btn-primary" type="submit">
                       <i className="fas fa-search"></i>
                     </button>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="card-body">
-              <DataTable
-                columns={columns}
-                data={propiedades}
-                loading={loading}
-              />
-            </div>
-            {pagination.totalPages > 1 && (
-              <div className="card-footer clearfix">
-                <ul className="pagination pagination-sm m-0 float-right">
-                  <li className={`page-item ${pagination.page <= 1 ? 'disabled' : ''}`}>
-                    <button className="page-link" onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}>«</button>
-                  </li>
-                  {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(p => (
-                    <li key={p} className={`page-item ${p === pagination.page ? 'active' : ''}`}>
-                      <button className="page-link" onClick={() => setPagination(prev => ({ ...prev, page: p }))}>{p}</button>
-                    </li>
-                  ))}
-                  <li className={`page-item ${pagination.page >= pagination.totalPages ? 'disabled' : ''}`}>
-                    <button className="page-link" onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}>»</button>
-                  </li>
-                </ul>
+              <div className="col-md-3">
+                <select className="form-control" value={filters.estatus}
+                  onChange={(e) => handleFilterChange('estatus', e.target.value)}>
+                  <option value="">Todos los estados</option>
+                  <option value="A">Activos</option>
+                  <option value="I">Inactivos</option>
+                </select>
               </div>
-            )}
-          </div>
+              <div className="col-md-3">
+                <button type="button" className="btn btn-secondary btn-block"
+                  onClick={() => { setFilters({ search: '', estatus: '' }); setPagination(prev => ({ ...prev, page: 1 })); }}>
+                  <i className="fas fa-times mr-2"></i>
+                  Limpiar
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <DataTable columns={columns} data={propiedades} loading={loading}
+            emptyMessage="No se encontraron propiedades" />
+
+          {pagination.totalPages > 1 && (
+            <div className="row mt-3">
+              <div className="col-md-6">
+                <div className="text-muted">
+                  Mostrando {propiedades.length} de {pagination.total} propiedades
+                </div>
+              </div>
+              <div className="col-md-6">
+                <nav>
+                  <ul className="pagination justify-content-end mb-0">
+                    <li className={`page-item ${pagination.page === 1 ? 'disabled' : ''}`}>
+                      <button className="page-link"
+                        onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
+                        disabled={pagination.page === 1}>Anterior</button>
+                    </li>
+                    {[...Array(pagination.totalPages)].map((_, idx) => {
+                      const p = idx + 1;
+                      if (p === 1 || p === pagination.totalPages || (p >= pagination.page - 1 && p <= pagination.page + 1)) {
+                        return (
+                          <li key={p} className={`page-item ${pagination.page === p ? 'active' : ''}`}>
+                            <button className="page-link" onClick={() => setPagination(prev => ({ ...prev, page: p }))}>{p}</button>
+                          </li>
+                        );
+                      } else if (p === pagination.page - 2 || p === pagination.page + 2) {
+                        return <li key={p} className="page-item disabled"><span className="page-link">...</span></li>;
+                      }
+                      return null;
+                    })}
+                    <li className={`page-item ${pagination.page === pagination.totalPages ? 'disabled' : ''}`}>
+                      <button className="page-link"
+                        onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
+                        disabled={pagination.page === pagination.totalPages}>Siguiente</button>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </PageLayout>
