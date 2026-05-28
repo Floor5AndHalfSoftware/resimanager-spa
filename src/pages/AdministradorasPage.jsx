@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageLayout from '../components/common/PageLayout';
 import DataTable from '../components/common/DataTable';
-import { getAdministradoras } from '../services/api';
+import { getAdministradoras, deleteAdministradora } from '../services/api';
 import { showToast } from '../components/common/Toast';
 
 const AdministradorasPage = () => {
@@ -35,6 +35,17 @@ const AdministradorasPage = () => {
       showToast(error.message || 'Error al cargar administradoras', 'error');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('¿Inactivar esta administradora?')) return;
+    try {
+      await deleteAdministradora(id);
+      showToast('Administradora inactivada correctamente', 'success');
+      loadAdministradoras();
+    } catch (err) {
+      showToast(err.message || 'Error al inactivar administradora', 'error');
     }
   };
 
@@ -71,17 +82,23 @@ const AdministradorasPage = () => {
     {
       key: 'actions',
       label: 'Acciones',
-      width: '100px',
+      width: '230px',
       align: 'center',
       render: (value, adm) => (
-        <button
-          className="btn btn-sm btn-info"
-          onClick={() => navigate(`/dashboard/administradoras/${adm.id}/usuarios`)}
-          title="Ver usuarios de esta administradora"
-        >
-          <i className="fas fa-users mr-1"></i>
-          Usuarios
-        </button>
+        <div className="btn-group">
+          <button className="btn btn-sm btn-info" title="Editar"
+            onClick={() => navigate(`/dashboard/administradoras/${adm.id}/editar`)}>
+            <i className="fas fa-edit"></i>
+          </button>
+          <button className="btn btn-sm btn-success" title="Ver usuarios"
+            onClick={() => navigate(`/dashboard/administradoras/${adm.id}/usuarios`)}>
+            <i className="fas fa-users"></i>
+          </button>
+          <button className="btn btn-sm btn-danger" title="Inactivar"
+            onClick={() => handleDelete(adm.id)}>
+            <i className="fas fa-trash"></i>
+          </button>
+        </div>
       )
     }
   ];
@@ -96,6 +113,12 @@ const AdministradorasPage = () => {
                 <i className="fas fa-building mr-2"></i>
                 Lista de Administradoras
               </h3>
+            </div>
+            <div className="col-md-6 text-right">
+              <button className="btn btn-primary btn-sm" onClick={() => navigate('/dashboard/administradoras/nuevo')}>
+                <i className="fas fa-plus mr-1"></i>
+                Nueva Administradora
+              </button>
             </div>
           </div>
         </div>

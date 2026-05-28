@@ -825,6 +825,53 @@ export const deletePropiedad = async (id) => {
     return handleResponse(response);
 };
 
+// ==================== ADMINISTRADORAS CRUD ====================
+
+/**
+ * Create a new administradora
+ * @param {object} data - { documento, nombre, telefono, email }
+ * @returns {Promise} Created administradora
+ */
+export const createAdministradora = async (data) => {
+    const response = await fetch(`${BASE_URL}/administradoras`, {
+        method: 'POST',
+        headers: getHeaders(),
+        credentials: 'include',
+        body: JSON.stringify(data)
+    });
+    return handleResponse(response);
+};
+
+/**
+ * Update an existing administradora
+ * @param {number} id - Administradora ID
+ * @param {object} data - { documento?, nombre?, telefono?, email?, estatus? }
+ * @returns {Promise} Updated administradora
+ */
+export const updateAdministradora = async (id, data) => {
+    const response = await fetch(`${BASE_URL}/administradoras/${id}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        credentials: 'include',
+        body: JSON.stringify(data)
+    });
+    return handleResponse(response);
+};
+
+/**
+ * Inactivate (soft-delete) an administradora
+ * @param {number} id - Administradora ID
+ * @returns {Promise} Result message
+ */
+export const deleteAdministradora = async (id) => {
+    const response = await fetch(`${BASE_URL}/administradoras/${id}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+    return handleResponse(response);
+};
+
 // ==================== DASHBOARD API ====================
 
 /**
@@ -881,6 +928,10 @@ export default {
     createConjunto,
     updateConjunto,
     deleteConjunto,
+    // Administradoras CRUD
+    createAdministradora,
+    updateAdministradora,
+    deleteAdministradora,
     // Propietarios
     getPropietarios,
     getPropietarioById,

@@ -17,6 +17,7 @@ import PerfilDetailPage from "./pages/perfiles/PerfilDetailPage.jsx";
 import UsuariosPage from "./pages/UsuariosPage.jsx";
 import UsuarioFormPage from "./pages/UsuarioFormPage.jsx";
 import AdministradorasPage from "./pages/AdministradorasPage.jsx";
+import AdministradoraFormPage from "./pages/AdministradoraFormPage.jsx";
 import ConjuntosPage from "./pages/ConjuntosPage.jsx";
 import ConjuntoFormPage from "./pages/ConjuntoFormPage.jsx";
 import AdministradoraUsuariosPage from "./pages/asignaciones/AdministradoraUsuariosPage.jsx";
@@ -75,6 +76,8 @@ function InnerApp() {
 
                     {/* Administradoras */}
                     <Route path="administradoras" element={<AdministradorasPage />} />
+                    <Route path="administradoras/nuevo" element={<AdministradoraFormPage />} />
+                    <Route path="administradoras/:id/editar" element={<AdministradoraFormPage />} />
                     <Route path="administradoras/:id/usuarios" element={<AdministradoraUsuariosPage />} />
 
                     {/* Conjuntos */}
