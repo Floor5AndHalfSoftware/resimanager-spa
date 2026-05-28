@@ -1,13 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getDashboardStats } from '../services/api';
 
 const HomePage = () => {
     const { activeContext } = useAuth();
+    const [stats, setStats] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                setLoading(true);
+                const data = await getDashboardStats();
+                setStats(data);
+            } catch (err) {
+                setError(err.message || 'Error al cargar estadísticas');
+                console.error('Error fetching dashboard stats:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchStats();
+    }, []);
 
     return (
         <div className="content-wrapper">
-            {/* Content Header (Page header) */}
             <div className="content-header">
                 <div className="container-fluid">
                     <div className="row mb-2">
@@ -24,10 +43,8 @@ const HomePage = () => {
                 </div>
             </div>
 
-            {/* Main content */}
             <section className="content">
                 <div className="container-fluid">
-                    {/* Info boxes */}
                     <div className="row">
                         <div className="col-12 col-sm-6 col-md-3">
                             <div className="info-box">
@@ -36,7 +53,7 @@ const HomePage = () => {
                                 </span>
                                 <div className="info-box-content">
                                     <span className="info-box-text">Propiedades</span>
-                                    <span className="info-box-number">10</span>
+                                    <span className="info-box-number">{loading ? '...' : (stats?.totalPropiedades ?? 0)}</span>
                                 </div>
                             </div>
                         </div>
@@ -46,8 +63,8 @@ const HomePage = () => {
                                     <i className="fas fa-users"></i>
                                 </span>
                                 <div className="info-box-content">
-                                    <span className="info-box-text">Residentes</span>
-                                    <span className="info-box-number">53</span>
+                                    <span className="info-box-text">Usuarios</span>
+                                    <span className="info-box-number">{loading ? '...' : (stats?.totalUsuarios ?? 0)}</span>
                                 </div>
                             </div>
                         </div>
@@ -58,7 +75,7 @@ const HomePage = () => {
                                 </span>
                                 <div className="info-box-content">
                                     <span className="info-box-text">Facturas</span>
-                                    <span className="info-box-number">23</span>
+                                    <span className="info-box-number">{loading ? '...' : (stats?.totalFacturas ?? 0)}</span>
                                 </div>
                             </div>
                         </div>
@@ -69,13 +86,24 @@ const HomePage = () => {
                                 </span>
                                 <div className="info-box-content">
                                     <span className="info-box-text">Incidencias</span>
-                                    <span className="info-box-number">5</span>
+                                    <span className="info-box-number">{loading ? '...' : (stats?.totalIncidencias ?? 0)}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Welcome Card */}
+                    {error && (
+                        <div className="row">
+                            <div className="col-lg-12">
+                                <div className="alert alert-warning alert-dismissible">
+                                    <button type="button" className="close" data-dismiss="alert">&times;</button>
+                                    <h5><i className="icon fas fa-exclamation-triangle"></i> Atención</h5>
+                                    No se pudieron cargar las estadísticas: {error}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="card">

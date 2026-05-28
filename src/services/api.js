@@ -825,6 +825,21 @@ export const deletePropiedad = async (id) => {
     return handleResponse(response);
 };
 
+// ==================== DASHBOARD API ====================
+
+/**
+ * Get dashboard statistics
+ * @returns {Promise} Dashboard stats with counts and mock data
+ */
+export const getDashboardStats = async () => {
+    const response = await fetch(`${BASE_URL}/dashboard/stats`, {
+        method: 'GET',
+        headers: getHeaders(),
+        credentials: 'include'
+    });
+    return handleResponse(response);
+};
+
 export default {
     login,
     cambiarContexto,
@@ -878,5 +893,7 @@ export default {
     getPropiedadById,
     createPropiedad,
     updatePropiedad,
-    deletePropiedad
+    deletePropiedad,
+    // Dashboard
+    getDashboardStats
 };
