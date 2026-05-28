@@ -76,6 +76,7 @@ function InnerApp() {
 
                     {/* Administradoras */}
                     <Route path="administradoras" element={<AdministradorasPage />} />
+                    <Route path="administradoras/list" element={<AdministradorasPage />} />
                     <Route path="administradoras/nuevo" element={<AdministradoraFormPage />} />
                     <Route path="administradoras/:id/editar" element={<AdministradoraFormPage />} />
                     <Route path="administradoras/:id/usuarios" element={<AdministradoraUsuariosPage />} />
