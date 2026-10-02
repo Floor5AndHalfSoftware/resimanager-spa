@@ -32,6 +32,20 @@ export const AuthProvider = ({ children }) => {
         initializeAuth();
     }, []);
 
+    // Reset local state when the session cannot be renewed (refresh token invalid/expired).
+    // api.js clears localStorage and redirects to /login; here we only sync React state.
+    useEffect(() => {
+        const onSessionExpired = () => {
+            setUser(null);
+            setContextosDisponibles([]);
+            setActiveContext(null);
+            setActivePerfilId(null);
+        };
+
+        window.addEventListener('resimanager:session-expired', onSessionExpired);
+        return () => window.removeEventListener('resimanager:session-expired', onSessionExpired);
+    }, []);
+
     /**
      * Login function
      * @param {string} username 

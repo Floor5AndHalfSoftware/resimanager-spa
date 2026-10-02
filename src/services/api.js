@@ -5,6 +5,71 @@ const API_VERSION = import.meta.env.VITE_API_VERSION || '/v1';
 const BASE_URL = `${API_BASE_URL}${API_VERSION}`;
 
 /**
+ * Renueva la sesión de forma silenciosa usando la cookie HttpOnly `refresh`.
+ * Single-flight: varias peticiones concurrentes comparten una sola renovación.
+ */
+let refreshPromise = null;
+
+const refreshSession = () => {
+    if (!refreshPromise) {
+        refreshPromise = fetch(`${BASE_URL}/refresh`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include'
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('No se pudo renovar la sesión');
+                }
+                return response;
+            })
+            .finally(() => {
+                refreshPromise = null;
+            });
+    }
+    return refreshPromise;
+};
+
+/**
+ * Limpia la sesión local y redirige a login cuando el refresh no es válido.
+ */
+const expireSession = () => {
+    ['usuario', 'contextosDisponibles', 'contextosAplanados', 'activeContext', 'activePerfilId', 'menu']
+        .forEach((key) => localStorage.removeItem(key));
+
+    if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('resimanager:session-expired'));
+        if (window.location.pathname !== '/login') {
+            window.location.assign('/login');
+        }
+    }
+};
+
+const shouldSkipRefresh = (url) =>
+    url.includes('/refresh') || url.includes('/login') || url.includes('/logout');
+
+/**
+ * fetch con renovación silenciosa: ante un 401 por access token expirado,
+ * renueva la sesión una sola vez y reintenta la petición original.
+ */
+const apiFetch = async (url, options = {}) => {
+    const fetchOptions = { credentials: 'include', ...options };
+    let response = await fetch(url, fetchOptions);
+
+    if (response.status === 401 && !shouldSkipRefresh(url)) {
+        try {
+            await refreshSession();
+        } catch (error) {
+            expireSession();
+            return response;
+        }
+        response = await fetch(url, fetchOptions);
+    }
+
+    return response;
+};
+
+/**
  * Get headers for API requests
  * Note: Token is now sent via HttpOnly cookie, so we don't include Authorization header
  * @param {object} extraHeaders - Additional headers
@@ -49,7 +114,7 @@ const handleResponse = async (response) => {
 export const login = async (username, password) => {
     const encodedPassword = btoa(password); // Base64 encode
 
-    const response = await fetch(`${BASE_URL}/login`, {
+    const response = await apiFetch(`${BASE_URL}/login`, {
         method: 'POST',
         headers: getHeaders(),
         credentials: 'include', // Important: Include cookies in request
@@ -71,7 +136,7 @@ export const login = async (username, password) => {
  * @returns {Promise} New token and context info
  */
 export const cambiarContexto = async (contextData) => {
-    const response = await fetch(`${BASE_URL}/contexto/cambiar`, {
+    const response = await apiFetch(`${BASE_URL}/contexto/cambiar`, {
         method: 'POST',
         headers: getHeaders(),
         credentials: 'include', // Important: Include cookies in request
@@ -94,7 +159,7 @@ export const getMenuByPerfil = async (perfilId) => {
     console.log('🍔 Calling getMenuByPerfil with perfilId:', perfilId);
     console.log('🔗 URL:', `${BASE_URL}/menu/perfil`);
     
-    const response = await fetch(`${BASE_URL}/menu/perfil`, {
+    const response = await apiFetch(`${BASE_URL}/menu/perfil`, {
         method: 'GET',
         headers: getHeaders({
             'X-Perfil-Id': perfilId.toString()
@@ -113,7 +178,7 @@ export const getMenuByPerfil = async (perfilId) => {
  * @returns {Promise} All menu items
  */
 export const getAllMenus = async () => {
-    const response = await fetch(`${BASE_URL}/menu`, {
+    const response = await apiFetch(`${BASE_URL}/menu`, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include' // Important: Include cookies in request
@@ -129,7 +194,7 @@ export const getAllMenus = async () => {
  */
 export const logout = async () => {
     try {
-        await fetch(`${BASE_URL}/logout`, {
+        await apiFetch(`${BASE_URL}/logout`, {
             method: 'POST',
             headers: getHeaders(),
             credentials: 'include'
@@ -209,7 +274,7 @@ export const getPerfiles = async (params = {}) => {
 
     const url = `${BASE_URL}/perfiles${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
     
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include' // Important: Include cookies in request
@@ -224,7 +289,7 @@ export const getPerfiles = async (params = {}) => {
  * @returns {Promise} Profile detail with modules and permissions
  */
 export const getPerfilById = async (id) => {
-    const response = await fetch(`${BASE_URL}/perfiles/${id}`, {
+    const response = await apiFetch(`${BASE_URL}/perfiles/${id}`, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include' // Important: Include cookies in request
@@ -242,7 +307,7 @@ export const getPerfilById = async (id) => {
  * @returns {Promise} Created profile
  */
 export const createPerfil = async (data) => {
-    const response = await fetch(`${BASE_URL}/perfiles`, {
+    const response = await apiFetch(`${BASE_URL}/perfiles`, {
         method: 'POST',
         headers: getHeaders(),
         credentials: 'include', // Important: Include cookies in request
@@ -263,7 +328,7 @@ export const createPerfil = async (data) => {
  * @returns {Promise} Updated profile
  */
 export const updatePerfil = async (id, data) => {
-    const response = await fetch(`${BASE_URL}/perfiles/${id}`, {
+    const response = await apiFetch(`${BASE_URL}/perfiles/${id}`, {
         method: 'PUT',
         headers: getHeaders(),
         credentials: 'include', // Important: Include cookies in request
@@ -279,7 +344,7 @@ export const updatePerfil = async (id, data) => {
  * @returns {Promise} Success message
  */
 export const deletePerfil = async (id) => {
-    const response = await fetch(`${BASE_URL}/perfiles/${id}`, {
+    const response = await apiFetch(`${BASE_URL}/perfiles/${id}`, {
         method: 'DELETE',
         headers: getHeaders(),
         credentials: 'include' // Important: Include cookies in request
@@ -298,7 +363,7 @@ export const getModulos = async (nivel = null) => {
         ? `${BASE_URL}/modulos?nivel=${nivel}` 
         : `${BASE_URL}/modulos`;
     
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include' // Important: Include cookies in request
@@ -314,7 +379,7 @@ export const getModulos = async (nivel = null) => {
  * @returns {Promise} Assignment result
  */
 export const asignarModulos = async (perfilId, moduloIds) => {
-    const response = await fetch(`${BASE_URL}/perfiles/${perfilId}/modulos`, {
+    const response = await apiFetch(`${BASE_URL}/perfiles/${perfilId}/modulos`, {
         method: 'POST',
         headers: getHeaders(),
         credentials: 'include', // Important: Include cookies in request
@@ -331,7 +396,7 @@ export const asignarModulos = async (perfilId, moduloIds) => {
  * @returns {Promise} Revocation result
  */
 export const revocarModulo = async (perfilId, moduloId) => {
-    const response = await fetch(`${BASE_URL}/perfiles/${perfilId}/modulos/${moduloId}`, {
+    const response = await apiFetch(`${BASE_URL}/perfiles/${perfilId}/modulos/${moduloId}`, {
         method: 'DELETE',
         headers: getHeaders(),
         credentials: 'include' // Important: Include cookies in request
@@ -348,7 +413,7 @@ export const revocarModulo = async (perfilId, moduloId) => {
  * @returns {Promise} List of users with their profiles
  */
 export const getAdministradoraUsuarios = async (administradoraId) => {
-    const response = await fetch(`${BASE_URL}/administradoras/${administradoraId}/usuarios`, {
+    const response = await apiFetch(`${BASE_URL}/administradoras/${administradoraId}/usuarios`, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include'
@@ -363,7 +428,7 @@ export const getAdministradoraUsuarios = async (administradoraId) => {
  * @returns {Promise} List of users with their profiles
  */
 export const getConjuntoUsuarios = async (conjuntoId) => {
-    const response = await fetch(`${BASE_URL}/conjuntos/${conjuntoId}/usuarios`, {
+    const response = await apiFetch(`${BASE_URL}/conjuntos/${conjuntoId}/usuarios`, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include'
@@ -380,7 +445,7 @@ export const getConjuntoUsuarios = async (conjuntoId) => {
  * @returns {Promise} Assignment result
  */
 export const asignarPerfilesAdministradora = async (administradoraId, usuarioId, data) => {
-    const response = await fetch(`${BASE_URL}/administradoras/${administradoraId}/usuarios/${usuarioId}/perfiles`, {
+    const response = await apiFetch(`${BASE_URL}/administradoras/${administradoraId}/usuarios/${usuarioId}/perfiles`, {
         method: 'POST',
         headers: getHeaders(),
         credentials: 'include',
@@ -398,7 +463,7 @@ export const asignarPerfilesAdministradora = async (administradoraId, usuarioId,
  * @returns {Promise} Assignment result
  */
 export const asignarPerfilesConjunto = async (conjuntoId, usuarioId, data) => {
-    const response = await fetch(`${BASE_URL}/conjuntos/${conjuntoId}/usuarios/${usuarioId}/perfiles`, {
+    const response = await apiFetch(`${BASE_URL}/conjuntos/${conjuntoId}/usuarios/${usuarioId}/perfiles`, {
         method: 'POST',
         headers: getHeaders(),
         credentials: 'include',
@@ -416,7 +481,7 @@ export const asignarPerfilesConjunto = async (conjuntoId, usuarioId, data) => {
  * @returns {Promise} Removal result
  */
 export const removerPerfilAdministradora = async (administradoraId, usuarioId, perfilId) => {
-    const response = await fetch(`${BASE_URL}/administradoras/${administradoraId}/usuarios/${usuarioId}/perfiles/${perfilId}`, {
+    const response = await apiFetch(`${BASE_URL}/administradoras/${administradoraId}/usuarios/${usuarioId}/perfiles/${perfilId}`, {
         method: 'DELETE',
         headers: getHeaders(),
         credentials: 'include'
@@ -433,7 +498,7 @@ export const removerPerfilAdministradora = async (administradoraId, usuarioId, p
  * @returns {Promise} Removal result
  */
 export const removerPerfilConjunto = async (conjuntoId, usuarioId, perfilId) => {
-    const response = await fetch(`${BASE_URL}/conjuntos/${conjuntoId}/usuarios/${usuarioId}/perfiles/${perfilId}`, {
+    const response = await apiFetch(`${BASE_URL}/conjuntos/${conjuntoId}/usuarios/${usuarioId}/perfiles/${perfilId}`, {
         method: 'DELETE',
         headers: getHeaders(),
         credentials: 'include'
@@ -448,7 +513,7 @@ export const removerPerfilConjunto = async (conjuntoId, usuarioId, perfilId) => 
  * @returns {Promise} User profiles grouped by context
  */
 export const getUsuarioPerfiles = async (usuarioId) => {
-    const response = await fetch(`${BASE_URL}/usuarios/${usuarioId}/perfiles`, {
+    const response = await apiFetch(`${BASE_URL}/usuarios/${usuarioId}/perfiles`, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include'
@@ -479,7 +544,7 @@ export const getUsuarios = async (params = {}) => {
     const queryString = queryParams.toString();
     const url = queryString ? `${BASE_URL}/usuarios?${queryString}` : `${BASE_URL}/usuarios`;
 
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include'
@@ -494,7 +559,7 @@ export const getUsuarios = async (params = {}) => {
  * @returns {Promise} User details
  */
 export const getUsuarioById = async (usuarioId) => {
-    const response = await fetch(`${BASE_URL}/usuarios/${usuarioId}`, {
+    const response = await apiFetch(`${BASE_URL}/usuarios/${usuarioId}`, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include'
@@ -510,7 +575,7 @@ export const getUsuarioById = async (usuarioId) => {
  * @returns {Promise} Updated user
  */
 export const updateUsuario = async (usuarioId, data) => {
-    const response = await fetch(`${BASE_URL}/usuarios/${usuarioId}`, {
+    const response = await apiFetch(`${BASE_URL}/usuarios/${usuarioId}`, {
         method: 'PUT',
         headers: getHeaders(),
         credentials: 'include',
@@ -526,7 +591,7 @@ export const updateUsuario = async (usuarioId, data) => {
  * @returns {Promise} Result message
  */
 export const deleteUsuario = async (usuarioId) => {
-    const response = await fetch(`${BASE_URL}/usuarios/${usuarioId}`, {
+    const response = await apiFetch(`${BASE_URL}/usuarios/${usuarioId}`, {
         method: 'DELETE',
         headers: getHeaders(),
         credentials: 'include'
@@ -551,7 +616,7 @@ export const getAdministradoras = async (params = {}) => {
     const queryString = queryParams.toString();
     const url = queryString ? `${BASE_URL}/administradoras?${queryString}` : `${BASE_URL}/administradoras`;
 
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include'
@@ -566,7 +631,7 @@ export const getAdministradoras = async (params = {}) => {
  * @returns {Promise} Administradora details
  */
 export const getAdministradoraById = async (administradoraId) => {
-    const response = await fetch(`${BASE_URL}/administradoras/${administradoraId}`, {
+    const response = await apiFetch(`${BASE_URL}/administradoras/${administradoraId}`, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include'
@@ -591,7 +656,7 @@ export const getConjuntos = async (params = {}) => {
     const queryString = queryParams.toString();
     const url = queryString ? `${BASE_URL}/conjuntos?${queryString}` : `${BASE_URL}/conjuntos`;
 
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include'
@@ -606,7 +671,7 @@ export const getConjuntos = async (params = {}) => {
  * @returns {Promise} Conjunto details
  */
 export const getConjuntoById = async (conjuntoId) => {
-    const response = await fetch(`${BASE_URL}/conjuntos/${conjuntoId}`, {
+    const response = await apiFetch(`${BASE_URL}/conjuntos/${conjuntoId}`, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include'
@@ -621,7 +686,7 @@ export const getConjuntoById = async (conjuntoId) => {
  * @returns {Promise} Created conjunto
  */
 export const createConjunto = async (data) => {
-    const response = await fetch(`${BASE_URL}/conjuntos`, {
+    const response = await apiFetch(`${BASE_URL}/conjuntos`, {
         method: 'POST',
         headers: getHeaders(),
         credentials: 'include',
@@ -638,7 +703,7 @@ export const createConjunto = async (data) => {
  * @returns {Promise} Updated conjunto
  */
 export const updateConjunto = async (id, data) => {
-    const response = await fetch(`${BASE_URL}/conjuntos/${id}`, {
+    const response = await apiFetch(`${BASE_URL}/conjuntos/${id}`, {
         method: 'PUT',
         headers: getHeaders(),
         credentials: 'include',
@@ -654,7 +719,7 @@ export const updateConjunto = async (id, data) => {
  * @returns {Promise} Result message
  */
 export const deleteConjunto = async (id) => {
-    const response = await fetch(`${BASE_URL}/conjuntos/${id}`, {
+    const response = await apiFetch(`${BASE_URL}/conjuntos/${id}`, {
         method: 'DELETE',
         headers: getHeaders(),
         credentials: 'include'
@@ -682,7 +747,7 @@ export const getPropietarios = async (params = {}) => {
     const queryString = queryParams.toString();
     const url = queryString ? `${BASE_URL}/propietarios?${queryString}` : `${BASE_URL}/propietarios`;
 
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include'
@@ -698,7 +763,7 @@ export const getPropietarios = async (params = {}) => {
  * @returns {Promise} Propietario details
  */
 export const getPropietarioById = async (conjId, perId) => {
-    const response = await fetch(`${BASE_URL}/propietarios/${conjId}/${perId}`, {
+    const response = await apiFetch(`${BASE_URL}/propietarios/${conjId}/${perId}`, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include'
@@ -713,7 +778,7 @@ export const getPropietarioById = async (conjId, perId) => {
  * @returns {Promise} Created propietario
  */
 export const createPropietario = async (data) => {
-    const response = await fetch(`${BASE_URL}/propietarios`, {
+    const response = await apiFetch(`${BASE_URL}/propietarios`, {
         method: 'POST',
         headers: getHeaders(),
         credentials: 'include',
@@ -731,7 +796,7 @@ export const createPropietario = async (data) => {
  * @returns {Promise} Updated propietario
  */
 export const updatePropietario = async (conjId, perId, data) => {
-    const response = await fetch(`${BASE_URL}/propietarios/${conjId}/${perId}`, {
+    const response = await apiFetch(`${BASE_URL}/propietarios/${conjId}/${perId}`, {
         method: 'PUT',
         headers: getHeaders(),
         credentials: 'include',
@@ -748,7 +813,7 @@ export const updatePropietario = async (conjId, perId, data) => {
  * @returns {Promise} Result message
  */
 export const deletePropietario = async (conjId, perId) => {
-    const response = await fetch(`${BASE_URL}/propietarios/${conjId}/${perId}`, {
+    const response = await apiFetch(`${BASE_URL}/propietarios/${conjId}/${perId}`, {
         method: 'DELETE',
         headers: getHeaders(),
         credentials: 'include'
@@ -760,7 +825,7 @@ export const deletePropietario = async (conjId, perId) => {
 // ==================== Propiedades ====================
 
 export const getClasesPropiedad = async () => {
-    const response = await fetch(`${BASE_URL}/propiedades/clases`, {
+    const response = await apiFetch(`${BASE_URL}/propiedades/clases`, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include'
@@ -779,7 +844,7 @@ export const getPropiedades = async (params = {}) => {
     const queryString = queryParams.toString();
     const url = queryString ? `${BASE_URL}/propiedades?${queryString}` : `${BASE_URL}/propiedades`;
 
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include'
@@ -788,7 +853,7 @@ export const getPropiedades = async (params = {}) => {
 };
 
 export const getPropiedadById = async (id) => {
-    const response = await fetch(`${BASE_URL}/propiedades/${id}`, {
+    const response = await apiFetch(`${BASE_URL}/propiedades/${id}`, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include'
@@ -797,7 +862,7 @@ export const getPropiedadById = async (id) => {
 };
 
 export const createPropiedad = async (data) => {
-    const response = await fetch(`${BASE_URL}/propiedades`, {
+    const response = await apiFetch(`${BASE_URL}/propiedades`, {
         method: 'POST',
         headers: getHeaders(),
         credentials: 'include',
@@ -807,7 +872,7 @@ export const createPropiedad = async (data) => {
 };
 
 export const updatePropiedad = async (id, data) => {
-    const response = await fetch(`${BASE_URL}/propiedades/${id}`, {
+    const response = await apiFetch(`${BASE_URL}/propiedades/${id}`, {
         method: 'PUT',
         headers: getHeaders(),
         credentials: 'include',
@@ -817,7 +882,7 @@ export const updatePropiedad = async (id, data) => {
 };
 
 export const deletePropiedad = async (id) => {
-    const response = await fetch(`${BASE_URL}/propiedades/${id}`, {
+    const response = await apiFetch(`${BASE_URL}/propiedades/${id}`, {
         method: 'DELETE',
         headers: getHeaders(),
         credentials: 'include'
@@ -833,7 +898,7 @@ export const deletePropiedad = async (id) => {
  * @returns {Promise} Created administradora
  */
 export const createAdministradora = async (data) => {
-    const response = await fetch(`${BASE_URL}/administradoras`, {
+    const response = await apiFetch(`${BASE_URL}/administradoras`, {
         method: 'POST',
         headers: getHeaders(),
         credentials: 'include',
@@ -849,7 +914,7 @@ export const createAdministradora = async (data) => {
  * @returns {Promise} Updated administradora
  */
 export const updateAdministradora = async (id, data) => {
-    const response = await fetch(`${BASE_URL}/administradoras/${id}`, {
+    const response = await apiFetch(`${BASE_URL}/administradoras/${id}`, {
         method: 'PUT',
         headers: getHeaders(),
         credentials: 'include',
@@ -864,7 +929,7 @@ export const updateAdministradora = async (id, data) => {
  * @returns {Promise} Result message
  */
 export const deleteAdministradora = async (id) => {
-    const response = await fetch(`${BASE_URL}/administradoras/${id}`, {
+    const response = await apiFetch(`${BASE_URL}/administradoras/${id}`, {
         method: 'DELETE',
         headers: getHeaders(),
         credentials: 'include'
@@ -879,7 +944,7 @@ export const deleteAdministradora = async (id) => {
  * @returns {Promise} Dashboard stats with counts and mock data
  */
 export const getDashboardStats = async () => {
-    const response = await fetch(`${BASE_URL}/dashboard/stats`, {
+    const response = await apiFetch(`${BASE_URL}/dashboard/stats`, {
         method: 'GET',
         headers: getHeaders(),
         credentials: 'include'

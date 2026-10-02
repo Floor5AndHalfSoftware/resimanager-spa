@@ -17,7 +17,7 @@ Frontend React para la gestión de residencias y condominios.
 | /login | LoginPage | Inicio de sesión |
 | /select-context | ContextSelectorPage | Selección de contexto multi-tenant |
 | /dashboard | DashboardPage | Layout con menú dinámico |
-| /dashboard/ | HomePage | Página principal |
+| /dashboard/ | HomePage | Dashboard con estadísticas dinámicas |
 | /dashboard/usuarios | UsuariosPage | Listado de usuarios |
 | /dashboard/usuarios/:id/editar | UsuarioFormPage | Editar usuario |
 | /dashboard/usuarios/:usuarioId/perfiles | UsuarioPerfilesPage | Perfiles del usuario |
@@ -25,9 +25,13 @@ Frontend React para la gestión de residencias y condominios.
 | /dashboard/perfiles/nuevo | PerfilFormPage | Crear perfil |
 | /dashboard/perfiles/:id | PerfilDetailPage | Detalle de perfil |
 | /dashboard/perfiles/:id/editar | PerfilFormPage | Editar perfil |
-| /dashboard/administradoras | AdministradorasPage | Listado de administradoras |
+| /dashboard/administradoras | AdministradorasPage | Listado + editar/inactivar |
+| /dashboard/administradoras/nuevo | AdministradoraFormPage | Crear administradora |
+| /dashboard/administradoras/:id/editar | AdministradoraFormPage | Editar administradora |
 | /dashboard/administradoras/:id/usuarios | AdministradoraUsuariosPage | Usuarios de administradora |
-| /dashboard/conjuntos | ConjuntosPage | Listado de conjuntos |
+| /dashboard/conjuntos | ConjuntosPage | Listado + editar/inactivar |
+| /dashboard/conjuntos/nuevo | ConjuntoFormPage | Crear conjunto |
+| /dashboard/conjuntos/:id/editar | ConjuntoFormPage | Editar conjunto |
 | /dashboard/conjuntos/:id/usuarios | ConjuntoUsuariosPage | Usuarios de conjunto |
 | /dashboard/:contextType/:contextId/usuarios/:usuarioId/perfiles | AsignarPerfilesPage | Asignar perfiles |
 | /dashboard/propiedades | PropertiesPage | Listado de propiedades |
