@@ -4,8 +4,8 @@
  * Esta guía documenta los patrones y componentes de formulario
  * basados en AdminLTE 3 para usar en la aplicación.
  * 
- * Los componentes siguen el patrón del template AdminLTE ubicado en:
- * docs/general/Template/AdminLTE 3 _ Tabbed IFrames_files/general.html
+ * Los componentes siguen el patrón del template AdminLTE 3:
+ * https://adminlte.io/themes/v3/pages/forms/general.html
  */
 
 // ============================================================================
