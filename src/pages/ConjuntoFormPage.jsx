@@ -33,7 +33,7 @@ const ConjuntoFormPage = () => {
     try {
       const resp = await getUsuarios({ limit: 500 });
       setPersonas(resp.data || []);
-    } catch (err) {
+    } catch {
       showToast('Error al cargar personas de contacto', 'error');
     }
   };

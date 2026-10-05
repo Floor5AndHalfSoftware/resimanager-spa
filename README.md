@@ -125,14 +125,14 @@ Convenciones: componentes y archivos en **PascalCase**; páginas con sufijo `Pag
 ```env
 VITE_API_BASE_URL=http://localhost:8080
 VITE_API_VERSION=/v1
-VITE_PORT=5173
+VITE_PORT=5000
 ```
 
 ## Ejecución
 
 ```bash
 npm install
-npm run dev     # http://localhost:5173
+npm run dev     # http://localhost:5000 (VITE_PORT)
 npm run build   # build de producción -> dist/
 npm run lint
 npm run preview

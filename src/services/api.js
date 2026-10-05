@@ -59,7 +59,7 @@ const apiFetch = async (url, options = {}) => {
     if (response.status === 401 && !shouldSkipRefresh(url)) {
         try {
             await refreshSession();
-        } catch (error) {
+        } catch {
             expireSession();
             return response;
         }

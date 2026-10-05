@@ -18,7 +18,7 @@ const FormExample = () => {
         newsletter: false,
     });
 
-    const [errors, setErrors] = useState({});
+    const [errors] = useState({});
 
     const roles = [
         { value: 'admin', label: 'Administrador' },

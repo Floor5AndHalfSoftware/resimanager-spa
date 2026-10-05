@@ -38,7 +38,7 @@ const PropiedadFormPage = () => {
       ]);
       setConjuntos(conjResp.data || []);
       setClases(clasesResp || []);
-    } catch (err) {
+    } catch {
       showToast('Error al cargar datos auxiliares', 'error');
     }
   };

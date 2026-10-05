@@ -5,7 +5,7 @@ import { useParams, Link } from 'react-router-dom';
  * Generic page component that can be used for any menu item route
  * This acts as a placeholder until specific pages are implemented
  */
-const GenericPage = ({ title, breadcrumbs }) => {
+const GenericPage = ({ title }) => {
     const params = useParams();
     const { controller, method } = params;
 

@@ -17,9 +17,6 @@
  * Componente de input con label, icono opcional y validación
  */
 
-// Importación
-import PropTypes from 'prop-types';
-
 // Componente básico
 export const FormInput = ({
     label,
