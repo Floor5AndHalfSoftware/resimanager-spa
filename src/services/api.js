@@ -952,6 +952,39 @@ export const getDashboardStats = async () => {
     return handleResponse(response);
 };
 
+// ==================== RECUPERACIÓN DE CONTRASEÑA ====================
+
+/**
+ * Solicita un enlace de restablecimiento de contraseña
+ * @param {string} email
+ * @returns {Promise} Mensaje de confirmación
+ */
+export const forgotPassword = async (email) => {
+    const response = await apiFetch(`${BASE_URL}/auth/forgot-password`, {
+        method: 'POST',
+        headers: getHeaders(),
+        credentials: 'include',
+        body: JSON.stringify({ email })
+    });
+    return handleResponse(response);
+};
+
+/**
+ * Restablece la contraseña con el token recibido por email
+ * @param {string} token
+ * @param {string} password
+ * @returns {Promise} Mensaje de confirmación
+ */
+export const resetPassword = async (token, password) => {
+    const response = await apiFetch(`${BASE_URL}/auth/reset-password`, {
+        method: 'POST',
+        headers: getHeaders(),
+        credentials: 'include',
+        body: JSON.stringify({ token, password })
+    });
+    return handleResponse(response);
+};
+
 export default {
     login,
     cambiarContexto,
@@ -1011,5 +1044,8 @@ export default {
     updatePropiedad,
     deletePropiedad,
     // Dashboard
-    getDashboardStats
+    getDashboardStats,
+    // Recuperación de contraseña
+    forgotPassword,
+    resetPassword
 };

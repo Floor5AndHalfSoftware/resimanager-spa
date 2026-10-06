@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from '../../context/AuthContext';
 
 const Login = () => {
@@ -173,7 +173,7 @@ const Login = () => {
                         </form>
                         <div className="mt-3">
                             <p className="mb-1">
-                                <a href="#">Olvidé mi contraseña</a>
+                                <Link to="/forgot-password">Olvidé mi contraseña</Link>
                             </p>
                         </div>
                     </div>

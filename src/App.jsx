@@ -3,6 +3,8 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import { ToastContainer } from './components/common/Toast';
 import LoginPage from "./pages/LoginPage.jsx";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage.jsx";
+import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import ContextSelectorPage from "./pages/ContextSelectorPage.jsx";
 import FormShowcase from "./pages/FormShowcase.jsx";
@@ -43,6 +45,8 @@ function InnerApp() {
             <Routes>
                 <Route path="/" element={<LoginPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
+                <Route path="/forgot-password" element={<ForgotPasswordPage/>}/>
+                <Route path="/reset-password" element={<ResetPasswordPage/>}/>
                 <Route path="/showcase" element={<FormShowcase/>}/>
                 <Route 
                     path="/select-context" 
